@@ -1,0 +1,19 @@
+C:\Users\Renato\Documents\SharpDevelop Projects\Stimgrasp\Stimgrasp\obj\Debug\Stimgrasp.csprojResolveAssemblyReference.cache
+C:\Users\Renato\Documents\SharpDevelop Projects\Stimgrasp\Stimgrasp\obj\Debug\Stimgrasp.MainForm.resources
+C:\Users\Renato\Documents\SharpDevelop Projects\Stimgrasp\Stimgrasp\obj\Debug\Stimgrasp.csproj.GenerateResource.Cache
+C:\Users\Renato\Documents\SharpDevelop Projects\Stimgrasp\Stimgrasp\bin\Debug\Stimgrasp.exe.config
+C:\Users\Renato\Documents\SharpDevelop Projects\Stimgrasp\Stimgrasp\bin\Debug\Stimgrasp.exe
+C:\Users\Renato\Documents\SharpDevelop Projects\Stimgrasp\Stimgrasp\bin\Debug\Stimgrasp.pdb
+C:\Users\Renato\Documents\SharpDevelop Projects\Stimgrasp\Stimgrasp\obj\Debug\Stimgrasp.exe
+C:\Users\Renato\Documents\SharpDevelop Projects\Stimgrasp\Stimgrasp\obj\Debug\Stimgrasp.pdb
+C:\Users\Renato\Documents\SharpDevelop Projects\Stimgrasp\Stimgrasp\bin\Debug\af-ZA\Stimgrasp.resources.dll
+C:\Users\Renato\Documents\SharpDevelop Projects\Stimgrasp\Stimgrasp\obj\Debug\Stimgrasp.MainForm.af-ZA.resources
+C:\Users\Renato\Documents\SharpDevelop Projects\Stimgrasp\Stimgrasp\obj\Debug\af-ZA\Stimgrasp.resources.dll
+C:\Users\acer\Desktop\Stimgrasp\Stimgrasp\obj\Debug\Stimgrasp.csprojResolveAssemblyReference.cache
+C:\Users\acer\Desktop\Stimgrasp\Stimgrasp\obj\Debug\Stimgrasp.Form1.resources
+C:\Users\acer\Desktop\Stimgrasp\Stimgrasp\obj\Debug\Stimgrasp.MainForm.resources
+C:\Users\acer\Desktop\Stimgrasp\Stimgrasp\obj\Debug\Stimgrasp.MainForm.af-ZA.resources
+C:\Users\acer\Desktop\Stimgrasp\Stimgrasp\obj\Debug\Stimgrasp.csproj.GenerateResource.Cache
+C:\Users\acer\Desktop\Stimgrasp\Stimgrasp\obj\Debug\af-ZA\Stimgrasp.resources.dll
+C:\Users\acer\Desktop\Stimgrasp\Stimgrasp\obj\Debug\Stimgrasp.exe
+C:\Users\acer\Desktop\Stimgrasp\Stimgrasp\obj\Debug\Stimgrasp.pdb

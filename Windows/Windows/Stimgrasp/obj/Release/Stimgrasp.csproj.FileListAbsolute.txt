@@ -1,0 +1,10 @@
+C:\Users\Renato\Documents\SharpDevelop Projects\Stimgrasp\Stimgrasp\bin\Release\Stimgrasp.exe.config
+C:\Users\Renato\Documents\SharpDevelop Projects\Stimgrasp\Stimgrasp\bin\Release\Stimgrasp.exe
+C:\Users\Renato\Documents\SharpDevelop Projects\Stimgrasp\Stimgrasp\bin\Release\af-ZA\Stimgrasp.resources.dll
+C:\Users\Renato\Documents\SharpDevelop Projects\Stimgrasp\Stimgrasp\obj\Release\Stimgrasp.csprojResolveAssemblyReference.cache
+C:\Users\Renato\Documents\SharpDevelop Projects\Stimgrasp\Stimgrasp\obj\Release\Stimgrasp.MainForm.resources
+C:\Users\Renato\Documents\SharpDevelop Projects\Stimgrasp\Stimgrasp\obj\Release\Stimgrasp.MainForm.af-ZA.resources
+C:\Users\Renato\Documents\SharpDevelop Projects\Stimgrasp\Stimgrasp\obj\Release\Stimgrasp.csproj.GenerateResource.Cache
+C:\Users\Renato\Documents\SharpDevelop Projects\Stimgrasp\Stimgrasp\obj\Release\af-ZA\Stimgrasp.resources.dll
+C:\Users\Renato\Documents\SharpDevelop Projects\Stimgrasp\Stimgrasp\obj\Release\Stimgrasp.exe
+C:\Users\Renato\Documents\SharpDevelop Projects\Stimgrasp\Stimgrasp\obj\Release\Stimgrasp.Form1.resources
