@@ -189,13 +189,13 @@ Program Memory  [Origin = 0x200, Length = 0xa9fc]
 section                    address   length (PC units)   length (bytes) (dec)
 -------                    -------   -----------------   --------------------
 .text                        0x200              0x31a2          0x4a73  (19059)
-.const                      0x33a2              0x18b6          0x2511  (9489)
-.text                       0x4c58              0x3f94          0x5f5e  (24414)
-.dinit                      0x8bec               0x126           0x1b9  (441)
-.text                       0x8d12                0xa4            0xf6  (246)
-.init.delay32               0x8db6                0x1c            0x2a  (42)
+.const                      0x33a2              0x1956          0x2601  (9729)
+.text                       0x4cf8              0x407a          0x60b7  (24759)
+.dinit                      0x8d72               0x126           0x1b9  (441)
+.text                       0x8e98                0xa4            0xf6  (246)
+.init.delay32               0x8f3c                0x1c            0x2a  (42)
 
-                 Total program memory used (bytes):         0xd1bb  (53691) 82%
+                 Total program memory used (bytes):         0xd404  (54276) 83%
 
 
 Ivt Memory  [Origin = 0x4, Length = 0xfc]
@@ -222,16 +222,16 @@ Data Memory  [Origin = 0x800, Length = 0x2000]
 
 section                    address      alignment gaps    total length  (dec)
 -------                    -------      --------------    -------------------
-.nbss                        0x800                   0            0x4c  (76)
-.ndata                       0x84c                   0             0x8  (8)
-.nbss                        0x854                   0             0xc  (12)
-.bss                         0x860                   0           0x7c0  (1984)
-.data                       0x1020                   0            0xee  (238)
-.bss                        0x110e                   0             0x6  (6)
-.data                       0x1114                   0             0x4  (4)
-.bss                        0x1118                   0             0x2  (2)
+.nbss                        0x800                   0            0x4e  (78)
+.ndata                       0x84e                   0             0x8  (8)
+.nbss                        0x856                   0             0xc  (12)
+.bss                         0x862                   0           0x7c0  (1984)
+.data                       0x1022                   0            0xee  (238)
+.bss                        0x1110                   0             0x6  (6)
+.data                       0x1116                   0             0x4  (4)
+.bss                        0x111a                   0             0x2  (2)
 
-                 Total data memory used (bytes):          0x91a  (2330) 28%
+                 Total data memory used (bytes):          0x91c  (2332) 28%
 
 
 Dynamic Memory Usage
@@ -239,9 +239,9 @@ Dynamic Memory Usage
 region                     address                      maximum length  (dec)
 ------                     -------                      ---------------------
 heap                             0                                   0  (0)
-stack                       0x111a                              0x16e6  (5862)
+stack                       0x111c                              0x16e4  (5860)
 
-                 Maximum dynamic memory (bytes):         0x16e6  (5862)
+                 Maximum dynamic memory (bytes):         0x16e4  (5860)
 
 
 External Symbols in Data Memory (by address):
@@ -271,67 +271,69 @@ External Symbols in Data Memory (by address):
                     0x0822                  _FATOR_CONTAGEM_GERAL
                     0x0824                  _counter_ch1
                     0x0826                  _CONTAGEM_MEDIA_VBAT
-                    0x0828                  _timer1
-                    0x082c                  _timer2
-                    0x0830                  _timer3
-                    0x0834                  _timer4
-                    0x0838                  _timer5
-                    0x083c                  _mode1
-                    0x083e                  _mode2
-                    0x0840                  _mode3
-                    0x0842                  _mode4
-                    0x0844                  _mode5
-                    0x0846                  _flag_IC1
-                    0x0847                  _flag_IC2
-                    0x0848                  _flag_IC3
-                    0x0849                  _flag_IC4
-                    0x084a                  _flag_IC5
-                    0x084c                  _SelectStatus
-                    0x084e                  _lastState
-                    0x0850                  _PRESET_LOW_TEMP
-                    0x0852                  _PRESET_HIGH_TEMP
-                    0x0854                  _PRx_value
-                    0x0858                  _Timer_Select_Global
-                    0x085a                  _RX1_index
-                    0x085c                  _RX2_index
-                    0x0860                  _buff
-                    0x0928                  _buffRX2
-                    0x09f0                  _RX_buff
-                    0x0a54                  _RX3_buff
-                    0x0d74                  _DACP
-                    0x0db0                  _AMP_SETPOINT_CHANNEL
-                    0x0dc0                  _AMP_ACTUAL_CHANNEL
-                    0x0dd0                  _AMP_CHANNEL
-                    0x0de0                  _PASSO_TENSAO_CHANNEL
-                    0x0df0                  _PASSO_RISE_CHANNEL
-                    0x0e00                  _PASSO_FALL_CHANNEL
-                    0x0e10                  _PRESETS_AMP
-                    0x0e20                  _PRESETS_ABERTURA
-                    0x0e30                  _PRESETS_PALMAR1
-                    0x0e40                  _PRESETS_PALMAR2
-                    0x0e50                  _PRESETS_LATERAL1
-                    0x0e60                  _PRESETS_LATERAL2
-                    0x0e70                  _PRESETS_EXTENSAO1
-                    0x0e80                  _PRESETS_EXTENSAO2
-                    0x0e90                  _RX1_buff
-                    0x0f58                  _RX2_buff
-                    0x1020                  __Stdin
-                    0x1048                  __Stdout
-                    0x1070                  __Stderr
-                    0x1098                  __Files
-                    0x10a8                  _PROTOCOLO
-                    0x110e                  __Aldata
-                    0x1114                  __Size_block
-                    0x1116                  ___C30_UART
-                    0x1118                  ___curbrk
+                    0x0828                  _flag_rx_protocol
+                    0x0829                  _flag_rx_protocol_received
+                    0x082a                  _timer1
+                    0x082e                  _timer2
+                    0x0832                  _timer3
+                    0x0836                  _timer4
+                    0x083a                  _timer5
+                    0x083e                  _mode1
+                    0x0840                  _mode2
+                    0x0842                  _mode3
+                    0x0844                  _mode4
+                    0x0846                  _mode5
+                    0x0848                  _flag_IC1
+                    0x0849                  _flag_IC2
+                    0x084a                  _flag_IC3
+                    0x084b                  _flag_IC4
+                    0x084c                  _flag_IC5
+                    0x084e                  _SelectStatus
+                    0x0850                  _lastState
+                    0x0852                  _PRESET_LOW_TEMP
+                    0x0854                  _PRESET_HIGH_TEMP
+                    0x0856                  _PRx_value
+                    0x085a                  _Timer_Select_Global
+                    0x085c                  _RX1_index
+                    0x085e                  _RX2_index
+                    0x0862                  _buff
+                    0x092a                  _buffRX2
+                    0x09f2                  _RX_buff
+                    0x0a56                  _RX3_buff
+                    0x0d76                  _DACP
+                    0x0db2                  _AMP_SETPOINT_CHANNEL
+                    0x0dc2                  _AMP_ACTUAL_CHANNEL
+                    0x0dd2                  _AMP_CHANNEL
+                    0x0de2                  _PASSO_TENSAO_CHANNEL
+                    0x0df2                  _PASSO_RISE_CHANNEL
+                    0x0e02                  _PASSO_FALL_CHANNEL
+                    0x0e12                  _PRESETS_AMP
+                    0x0e22                  _PRESETS_ABERTURA
+                    0x0e32                  _PRESETS_PALMAR1
+                    0x0e42                  _PRESETS_PALMAR2
+                    0x0e52                  _PRESETS_LATERAL1
+                    0x0e62                  _PRESETS_LATERAL2
+                    0x0e72                  _PRESETS_EXTENSAO1
+                    0x0e82                  _PRESETS_EXTENSAO2
+                    0x0e92                  _RX1_buff
+                    0x0f5a                  _RX2_buff
+                    0x1022                  __Stdin
+                    0x104a                  __Stdout
+                    0x1072                  __Stderr
+                    0x109a                  __Files
+                    0x10aa                  _PROTOCOLO
+                    0x1110                  __Aldata
+                    0x1116                  __Size_block
+                    0x1118                  ___C30_UART
+                    0x111a                  ___curbrk
 
 External Symbols in Data Memory (by name):
 
-                    0x0dc0                  _AMP_ACTUAL_CHANNEL
-                    0x0dd0                  _AMP_CHANNEL
-                    0x0db0                  _AMP_SETPOINT_CHANNEL
+                    0x0dc2                  _AMP_ACTUAL_CHANNEL
+                    0x0dd2                  _AMP_CHANNEL
+                    0x0db2                  _AMP_SETPOINT_CHANNEL
                     0x0826                  _CONTAGEM_MEDIA_VBAT
-                    0x0d74                  _DACP
+                    0x0d76                  _DACP
                     0x0822                  _FATOR_CONTAGEM_GERAL
                     0x081c                  _FLAG_ATUALIZA_CANAIS
                     0x0821                  _FLAG_DESLIGAMENTO_AUTOMATICO
@@ -343,67 +345,69 @@ External Symbols in Data Memory (by name):
                     0x0818                  _FLAG_STRING_AMP
                     0x0819                  _FLAG_STRING_RECEBIDA
                     0x0806                  _OutputState
-                    0x0e00                  _PASSO_FALL_CHANNEL
-                    0x0df0                  _PASSO_RISE_CHANNEL
-                    0x0de0                  _PASSO_TENSAO_CHANNEL
-                    0x0e20                  _PRESETS_ABERTURA
-                    0x0e10                  _PRESETS_AMP
-                    0x0e70                  _PRESETS_EXTENSAO1
-                    0x0e80                  _PRESETS_EXTENSAO2
-                    0x0e50                  _PRESETS_LATERAL1
-                    0x0e60                  _PRESETS_LATERAL2
-                    0x0e30                  _PRESETS_PALMAR1
-                    0x0e40                  _PRESETS_PALMAR2
-                    0x0852                  _PRESET_HIGH_TEMP
-                    0x0850                  _PRESET_LOW_TEMP
-                    0x10a8                  _PROTOCOLO
-                    0x0854                  _PRx_value
+                    0x0e02                  _PASSO_FALL_CHANNEL
+                    0x0df2                  _PASSO_RISE_CHANNEL
+                    0x0de2                  _PASSO_TENSAO_CHANNEL
+                    0x0e22                  _PRESETS_ABERTURA
+                    0x0e12                  _PRESETS_AMP
+                    0x0e72                  _PRESETS_EXTENSAO1
+                    0x0e82                  _PRESETS_EXTENSAO2
+                    0x0e52                  _PRESETS_LATERAL1
+                    0x0e62                  _PRESETS_LATERAL2
+                    0x0e32                  _PRESETS_PALMAR1
+                    0x0e42                  _PRESETS_PALMAR2
+                    0x0854                  _PRESET_HIGH_TEMP
+                    0x0852                  _PRESET_LOW_TEMP
+                    0x10aa                  _PROTOCOLO
+                    0x0856                  _PRx_value
                     0x0807                  _PowerON
-                    0x0e90                  _RX1_buff
-                    0x085a                  _RX1_index
-                    0x0f58                  _RX2_buff
-                    0x085c                  _RX2_index
-                    0x0a54                  _RX3_buff
+                    0x0e92                  _RX1_buff
+                    0x085c                  _RX1_index
+                    0x0f5a                  _RX2_buff
+                    0x085e                  _RX2_index
+                    0x0a56                  _RX3_buff
                     0x0812                  _RX3_index
-                    0x09f0                  _RX_buff
+                    0x09f2                  _RX_buff
                     0x080c                  _RX_data
                     0x080e                  _RX_index
                     0x0802                  _SelectState
-                    0x084c                  _SelectStatus
+                    0x084e                  _SelectStatus
                     0x0800                  _State
-                    0x0858                  _Timer_Select_Global
+                    0x085a                  _Timer_Select_Global
                     0x0808                  _UpAmp
-                    0x110e                  __Aldata
-                    0x1098                  __Files
-                    0x1114                  __Size_block
-                    0x1070                  __Stderr
-                    0x1020                  __Stdin
-                    0x1048                  __Stdout
-                    0x1116                  ___C30_UART
-                    0x1118                  ___curbrk
-                    0x0860                  _buff
-                    0x0928                  _buffRX2
+                    0x1110                  __Aldata
+                    0x109a                  __Files
+                    0x1116                  __Size_block
+                    0x1072                  __Stderr
+                    0x1022                  __Stdin
+                    0x104a                  __Stdout
+                    0x1118                  ___C30_UART
+                    0x111a                  ___curbrk
+                    0x0862                  _buff
+                    0x092a                  _buffRX2
                     0x0814                  _contador
                     0x0804                  _counter
                     0x0816                  _counter_T1
                     0x0824                  _counter_ch1
-                    0x0846                  _flag_IC1
-                    0x0847                  _flag_IC2
-                    0x0848                  _flag_IC3
-                    0x0849                  _flag_IC4
-                    0x084a                  _flag_IC5
+                    0x0848                  _flag_IC1
+                    0x0849                  _flag_IC2
+                    0x084a                  _flag_IC3
+                    0x084b                  _flag_IC4
+                    0x084c                  _flag_IC5
+                    0x0828                  _flag_rx_protocol
+                    0x0829                  _flag_rx_protocol_received
                     0x0810                  _flag_string
-                    0x084e                  _lastState
-                    0x083c                  _mode1
-                    0x083e                  _mode2
-                    0x0840                  _mode3
-                    0x0842                  _mode4
-                    0x0844                  _mode5
-                    0x0828                  _timer1
-                    0x082c                  _timer2
-                    0x0830                  _timer3
-                    0x0834                  _timer4
-                    0x0838                  _timer5
+                    0x0850                  _lastState
+                    0x083e                  _mode1
+                    0x0840                  _mode2
+                    0x0842                  _mode3
+                    0x0844                  _mode4
+                    0x0846                  _mode5
+                    0x082a                  _timer1
+                    0x082e                  _timer2
+                    0x0832                  _timer3
+                    0x0836                  _timer4
+                    0x083a                  _timer5
                     0x080a                  _valueADC
 
 External Symbols in Program Memory (by address):
@@ -485,11 +489,11 @@ External Symbols in Program Memory (by address):
                   0x001d28                  ___subsf3
                   0x001d2a                  ___addsf3
                   0x001de4                  ___divsf3
-                  0x001e68                  ___ltsf2
-                  0x001e68                  ___lesf2
                   0x001e68                  ___eqsf2
-                  0x001e6c                  ___gesf2
+                  0x001e68                  ___lesf2
+                  0x001e68                  ___ltsf2
                   0x001e6c                  ___gtsf2
+                  0x001e6c                  ___gesf2
                   0x001e70                  ___fixsfsi
                   0x001eb2                  ___fixunssfsi
                   0x001ee8                  ___floatsisf
@@ -546,102 +550,102 @@ External Symbols in Program Memory (by address):
                   0x003352                  ___divsi3
                   0x003370                  ___udivsi3
                   0x003390                  ___umodsi3
-                  0x003396                  ___mulp32eds3
                   0x003396                  ___mulsi3
+                  0x003396                  ___mulp32eds3
                   0x003396                  ___mulp32peds3
-                  0x004c58                  _MUXSelect
-                  0x004d10                  _MUXOff
-                  0x004d20                  _DAC_I2C
-                  0x004d46                  _Write_EEPROM
-                  0x005236                  _Read_EEPROM
-                  0x005760                  _Format_EEPROM
-                  0x0057e4                  _Show_EEPROM
-                  0x005ccc                  _I2Cread
-                  0x005cfc                  _UpdateChannel
-                  0x005d60                  _UpdateAmplitudes
-                  0x005e02                  _Verify_Protocol01
-                  0x006a7c                  _Init_Vars
-                  0x006b54                  _Rise_Ramp
-                  0x006c42                  _Step_Amp
-                  0x006d08                  _Request_VBAT
-                  0x006d6a                  _Verify_VBAT
-                  0x006dcc                  _Initializes_Equipment
-                  0x006e18                  _UpdateState
-                  0x0074ec                  _CheckONOFF
-                  0x00751c                  _Pulso
-                  0x007836                  __U2RXInterrupt
-                  0x007866                  _UART_Read_Data
-                  0x0078b8                  _Pulse300
-                  0x007926                  _Pulse_V0
-                  0x007988                  _Pulse
-                  0x0079ec                  __T1Interrupt
-                  0x007a40                  __T4Interrupt
-                  0x007a5e                  _main
-                  0x007bd0                  _System_Init
-                  0x007be0                  _InterruptPriority_set
-                  0x007c40                  _PPS
-                  0x00817c                  _UART2_set
-                  0x008230                  _UART2_Advanced_set
-                  0x0082cc                  _UART2_Send
-                  0x0082fe                  _UART2_Send_Decimal
-                  0x00831a                  _UART2_Send_Char
-                  0x008332                  _RX2_Start
-                  0x00833a                  _RX2_Stop
-                  0x008342                  _UART2_Receive
-                  0x0083fc                  _UART2_Receive_TimeOut
-                  0x0085a2                  _PWM_Frequency
-                  0x008700                  _PWM_Init
-                  0x0088b0                  _PWM_Stop
-                  0x00893a                  _I2C1_set
-                  0x008988                  _I2C1_Receive
-                  0x0089a0                  _I2C1_Repeated_Start
-                  0x0089be                  _I2C1_Start
-                  0x0089fa                  _I2C1_Stop
-                  0x008a18                  _I2C1_Send
-                  0x008a3c                  _I2C1_ACK
-                  0x008a6e                  _I2C1_StartOrRepeatedStartDetected
-                  0x008a84                  _I2C1_StopDetected
-                  0x008a9a                  _I2C2_set
-                  0x008ada                  _I2C2_Receive
-                  0x008af2                  _I2C2_Repeated_Start
-                  0x008b10                  _I2C2_Start
-                  0x008b4c                  _I2C2_Stop
-                  0x008b6a                  _I2C2_Send
-                  0x008b8e                  _I2C2_ACK
-                  0x008bc0                  _I2C2_StartOrRepeatedStartDetected
-                  0x008bd6                  _I2C2_StopDetected
-                  0x008d12                  _ADC_set
-                  0x008d24                  _ADC_Advanced_set
-                  0x008d8c                  _Analog_Read
-                  0x008db6                  ___delay32
+                  0x004cf8                  _MUXSelect
+                  0x004d96                  _MUXOff
+                  0x004da2                  _DAC_I2C
+                  0x004dc8                  _Write_EEPROM
+                  0x0052b8                  _Read_EEPROM
+                  0x0057e2                  _Format_EEPROM
+                  0x005866                  _Show_EEPROM
+                  0x005d4e                  _I2Cread
+                  0x005d7e                  _UpdateChannel
+                  0x005de2                  _UpdateAmplitudes
+                  0x005e84                  _Verify_Protocol01
+                  0x006afe                  _Verify_Protocol02
+                  0x006b5c                  _Init_Vars
+                  0x006c34                  _Rise_Ramp
+                  0x006d22                  _Step_Amp
+                  0x006de8                  _Request_VBAT
+                  0x006e4a                  _Verify_VBAT
+                  0x006eac                  _Initializes_Equipment
+                  0x006ef8                  _UpdateState
+                  0x0075cc                  _CheckONOFF
+                  0x0075fc                  _Pulso
+                  0x007916                  __U2RXInterrupt
+                  0x00798a                  _UART_Read_Data
+                  0x007a1a                  _Pulse_V0
+                  0x007a64                  _Pulse
+                  0x007ac8                  __T1Interrupt
+                  0x007b1c                  __T4Interrupt
+                  0x007b3a                  _main
+                  0x007d56                  _System_Init
+                  0x007d66                  _InterruptPriority_set
+                  0x007dc6                  _PPS
+                  0x008302                  _UART2_set
+                  0x0083b6                  _UART2_Advanced_set
+                  0x008452                  _UART2_Send
+                  0x008484                  _UART2_Send_Decimal
+                  0x0084a0                  _UART2_Send_Char
+                  0x0084b8                  _RX2_Start
+                  0x0084c0                  _RX2_Stop
+                  0x0084c8                  _UART2_Receive
+                  0x008582                  _UART2_Receive_TimeOut
+                  0x008728                  _PWM_Frequency
+                  0x008886                  _PWM_Init
+                  0x008a36                  _PWM_Stop
+                  0x008ac0                  _I2C1_set
+                  0x008b0e                  _I2C1_Receive
+                  0x008b26                  _I2C1_Repeated_Start
+                  0x008b44                  _I2C1_Start
+                  0x008b80                  _I2C1_Stop
+                  0x008b9e                  _I2C1_Send
+                  0x008bc2                  _I2C1_ACK
+                  0x008bf4                  _I2C1_StartOrRepeatedStartDetected
+                  0x008c0a                  _I2C1_StopDetected
+                  0x008c20                  _I2C2_set
+                  0x008c60                  _I2C2_Receive
+                  0x008c78                  _I2C2_Repeated_Start
+                  0x008c96                  _I2C2_Start
+                  0x008cd2                  _I2C2_Stop
+                  0x008cf0                  _I2C2_Send
+                  0x008d14                  _I2C2_ACK
+                  0x008d46                  _I2C2_StartOrRepeatedStartDetected
+                  0x008d5c                  _I2C2_StopDetected
+                  0x008e98                  _ADC_set
+                  0x008eaa                  _ADC_Advanced_set
+                  0x008f12                  _Analog_Read
+                  0x008f3c                  ___delay32
 
 External Symbols in Program Memory (by name):
 
-                  0x008d24                  _ADC_Advanced_set
-                  0x008d12                  _ADC_set
-                  0x008d8c                  _Analog_Read
-                  0x0074ec                  _CheckONOFF
-                  0x004d20                  _DAC_I2C
-                  0x005760                  _Format_EEPROM
-                  0x008a3c                  _I2C1_ACK
-                  0x008988                  _I2C1_Receive
-                  0x0089a0                  _I2C1_Repeated_Start
-                  0x008a18                  _I2C1_Send
-                  0x0089be                  _I2C1_Start
-                  0x008a6e                  _I2C1_StartOrRepeatedStartDetected
-                  0x0089fa                  _I2C1_Stop
-                  0x008a84                  _I2C1_StopDetected
-                  0x00893a                  _I2C1_set
-                  0x008b8e                  _I2C2_ACK
-                  0x008ada                  _I2C2_Receive
-                  0x008af2                  _I2C2_Repeated_Start
-                  0x008b6a                  _I2C2_Send
-                  0x008b10                  _I2C2_Start
-                  0x008bc0                  _I2C2_StartOrRepeatedStartDetected
-                  0x008b4c                  _I2C2_Stop
-                  0x008bd6                  _I2C2_StopDetected
-                  0x008a9a                  _I2C2_set
-                  0x005ccc                  _I2Cread
+                  0x008eaa                  _ADC_Advanced_set
+                  0x008e98                  _ADC_set
+                  0x008f12                  _Analog_Read
+                  0x0075cc                  _CheckONOFF
+                  0x004da2                  _DAC_I2C
+                  0x0057e2                  _Format_EEPROM
+                  0x008bc2                  _I2C1_ACK
+                  0x008b0e                  _I2C1_Receive
+                  0x008b26                  _I2C1_Repeated_Start
+                  0x008b9e                  _I2C1_Send
+                  0x008b44                  _I2C1_Start
+                  0x008bf4                  _I2C1_StartOrRepeatedStartDetected
+                  0x008b80                  _I2C1_Stop
+                  0x008c0a                  _I2C1_StopDetected
+                  0x008ac0                  _I2C1_set
+                  0x008d14                  _I2C2_ACK
+                  0x008c60                  _I2C2_Receive
+                  0x008c78                  _I2C2_Repeated_Start
+                  0x008cf0                  _I2C2_Send
+                  0x008c96                  _I2C2_Start
+                  0x008d46                  _I2C2_StartOrRepeatedStartDetected
+                  0x008cd2                  _I2C2_Stop
+                  0x008d5c                  _I2C2_StopDetected
+                  0x008c20                  _I2C2_set
+                  0x005d4e                  _I2Cread
                   0x00034e                  _IC1_Start
                   0x00036e                  _IC1_Stop
                   0x000380                  _IC1_Wait4Edge
@@ -662,26 +666,25 @@ External Symbols in Program Memory (by name):
                   0x0007a6                  _IC5_Stop
                   0x0007b8                  _IC5_Wait4Edge
                   0x000760                  _IC5_set
-                  0x006a7c                  _Init_Vars
-                  0x006dcc                  _Initializes_Equipment
-                  0x007be0                  _InterruptPriority_set
-                  0x004d10                  _MUXOff
-                  0x004c58                  _MUXSelect
-                  0x007c40                  _PPS
-                  0x0085a2                  _PWM_Frequency
-                  0x008700                  _PWM_Init
-                  0x0088b0                  _PWM_Stop
-                  0x007988                  _Pulse
-                  0x0078b8                  _Pulse300
-                  0x007926                  _Pulse_V0
-                  0x00751c                  _Pulso
+                  0x006b5c                  _Init_Vars
+                  0x006eac                  _Initializes_Equipment
+                  0x007d66                  _InterruptPriority_set
+                  0x004d96                  _MUXOff
+                  0x004cf8                  _MUXSelect
+                  0x007dc6                  _PPS
+                  0x008728                  _PWM_Frequency
+                  0x008886                  _PWM_Init
+                  0x008a36                  _PWM_Stop
+                  0x007a64                  _Pulse
+                  0x007a1a                  _Pulse_V0
+                  0x0075fc                  _Pulso
                   0x0019f2                  _RX1_Start
                   0x0019fa                  _RX1_Stop
-                  0x008332                  _RX2_Start
-                  0x00833a                  _RX2_Stop
-                  0x005236                  _Read_EEPROM
-                  0x006d08                  _Request_VBAT
-                  0x006b54                  _Rise_Ramp
+                  0x0084b8                  _RX2_Start
+                  0x0084c0                  _RX2_Stop
+                  0x0052b8                  _Read_EEPROM
+                  0x006de8                  _Request_VBAT
+                  0x006c34                  _Rise_Ramp
                   0x000b4e                  _SPI1_Send
                   0x000af8                  _SPI1_Send_Bytes
                   0x000894                  _SPI1_set
@@ -690,9 +693,9 @@ External Symbols in Program Memory (by name):
                   0x000e08                  _SPI2_Send_Bytes
                   0x000ba4                  _SPI2_set
                   0x000cd2                  _SPI2_setWithSS
-                  0x0057e4                  _Show_EEPROM
-                  0x006c42                  _Step_Amp
-                  0x007bd0                  _System_Init
+                  0x005866                  _Show_EEPROM
+                  0x006d22                  _Step_Amp
+                  0x007d56                  _System_Init
                   0x001088                  _Timer1_Start
                   0x001096                  _Timer1_Stop
                   0x000f1a                  _Timer1_set
@@ -714,20 +717,21 @@ External Symbols in Program Memory (by name):
                   0x0019a8                  _UART1_Send
                   0x0019da                  _UART1_Send_Char
                   0x001862                  _UART1_set
-                  0x008230                  _UART2_Advanced_set
-                  0x008342                  _UART2_Receive
-                  0x0083fc                  _UART2_Receive_TimeOut
-                  0x0082cc                  _UART2_Send
-                  0x00831a                  _UART2_Send_Char
-                  0x0082fe                  _UART2_Send_Decimal
-                  0x00817c                  _UART2_set
-                  0x007866                  _UART_Read_Data
-                  0x005d60                  _UpdateAmplitudes
-                  0x005cfc                  _UpdateChannel
-                  0x006e18                  _UpdateState
-                  0x005e02                  _Verify_Protocol01
-                  0x006d6a                  _Verify_VBAT
-                  0x004d46                  _Write_EEPROM
+                  0x0083b6                  _UART2_Advanced_set
+                  0x0084c8                  _UART2_Receive
+                  0x008582                  _UART2_Receive_TimeOut
+                  0x008452                  _UART2_Send
+                  0x0084a0                  _UART2_Send_Char
+                  0x008484                  _UART2_Send_Decimal
+                  0x008302                  _UART2_set
+                  0x00798a                  _UART_Read_Data
+                  0x005de2                  _UpdateAmplitudes
+                  0x005d7e                  _UpdateChannel
+                  0x006ef8                  _UpdateState
+                  0x005e84                  _Verify_Protocol01
+                  0x006afe                  _Verify_Protocol02
+                  0x006e4a                  _Verify_VBAT
+                  0x004dc8                  _Write_EEPROM
                   0x0031fc                  __Atexit
                   0x0030c6                  __Closreg
                   0x003188                  __DNKfflush
@@ -743,18 +747,18 @@ External Symbols in Program Memory (by name):
                   0x002f46                  __Puttxt
                   0x00086e                  __SPI1Interrupt
                   0x000b7e                  __SPI2Interrupt
-                  0x0079ec                  __T1Interrupt
+                  0x007ac8                  __T1Interrupt
                   0x000e8e                  __T2Interrupt
                   0x000ea6                  __T3Interrupt
-                  0x007a40                  __T4Interrupt
+                  0x007b1c                  __T4Interrupt
                   0x000ebe                  __T5Interrupt
                   0x001842                  __U1RXInterrupt
-                  0x007836                  __U2RXInterrupt
+                  0x007916                  __U2RXInterrupt
                   0x0030be                  __Vacopy
                   0x002804                  ___Printf_cdnopuxX
                   0x002968                  ___Putfld_cdnopuxX
                   0x001d2a                  ___addsf3
-                  0x008db6                  ___delay32
+                  0x008f3c                  ___delay32
                   0x00230a                  ___divdi3
                   0x001de4                  ___divsf3
                   0x003352                  ___divsi3
@@ -804,7 +808,7 @@ External Symbols in Program Memory (by name):
                   0x002b78                  _fwrite
                   0x0025f8                  _ldexpf
                   0x00263c                  _logf
-                  0x007a5e                  _main
+                  0x007b3a                  _main
                   0x0032de                  _malloc
                   0x002c20                  _memchr
                   0x002c34                  _memcpy
@@ -1151,7 +1155,7 @@ __CONFIG1
  *(.comment)
  .comment         0x000000         0x5e c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\liblega-c-elf.a(xfiles.XX_eo)
 
-.debug_info       0x000000       0xc5ab
+.debug_info       0x000000       0xc7ba
  *(.debug_info)
  .debug_info      0x000000        0x791 build/default/production/Libs/adc.o
  .debug_info      0x000791        0x7de build/default/production/Libs/i2c1.o
@@ -1164,7 +1168,7 @@ __CONFIG1
  .debug_info      0x0079b7       0x116f build/default/production/Libs/timers.o
  .debug_info      0x008b26        0xb3a build/default/production/Libs/uart1.o
  .debug_info      0x009660        0xa03 build/default/production/Libs/uart2.o
- .debug_info      0x00a063       0x2548 build/default/production/main.o
+ .debug_info      0x00a063       0x2757 build/default/production/main.o
  *(.gnu.linkonce.wi.*)
 
 .debug_abbrev     0x000000        0xff0
@@ -1182,7 +1186,7 @@ __CONFIG1
  .debug_abbrev    0x000c39        0x15f build/default/production/Libs/uart2.o
  .debug_abbrev    0x000d98        0x258 build/default/production/main.o
 
-.debug_line       0x000000       0x16cd
+.debug_line       0x000000       0x16f0
  *(.debug_line)
  .debug_line      0x000000         0xac build/default/production/Libs/adc.o
  .debug_line      0x0000ac         0xce build/default/production/Libs/i2c1.o
@@ -1195,9 +1199,9 @@ __CONFIG1
  .debug_line      0x00081b        0x197 build/default/production/Libs/timers.o
  .debug_line      0x0009b2        0x12c build/default/production/Libs/uart1.o
  .debug_line      0x000ade        0x12e build/default/production/Libs/uart2.o
- .debug_line      0x000c0c        0xac1 build/default/production/main.o
+ .debug_line      0x000c0c        0xae4 build/default/production/main.o
 
-.debug_frame      0x000000       0x10c0
+.debug_frame      0x000000       0x10d2
  *(.debug_frame)
  .debug_frame     0x000000         0x68 build/default/production/Libs/adc.o
  .debug_frame     0x000068        0x116 build/default/production/Libs/i2c1.o
@@ -1210,9 +1214,9 @@ __CONFIG1
  .debug_frame     0x0007f2        0x306 build/default/production/Libs/timers.o
  .debug_frame     0x000af8        0x122 build/default/production/Libs/uart1.o
  .debug_frame     0x000c1a        0x11e build/default/production/Libs/uart2.o
- .debug_frame     0x000d38        0x388 build/default/production/main.o
+ .debug_frame     0x000d38        0x39a build/default/production/main.o
 
-.debug_str        0x000000        0x93d
+.debug_str        0x000000        0x961
  *(.debug_str)
  .debug_str       0x000000         0x2d build/default/production/Libs/adc.o
  .debug_str       0x00002d         0x2b build/default/production/Libs/i2c1.o
@@ -1225,7 +1229,7 @@ __CONFIG1
  .debug_str       0x000400         0x9a build/default/production/Libs/timers.o
  .debug_str       0x00049a         0xd3 build/default/production/Libs/uart1.o
  .debug_str       0x00056d         0xca build/default/production/Libs/uart2.o
- .debug_str       0x000637        0x306 build/default/production/main.o
+ .debug_str       0x000637        0x32a build/default/production/main.o
 
 .debug_loc
  *(.debug_loc)
@@ -1234,7 +1238,7 @@ __CONFIG1
  *(.debug_macinfo)
 
 .debug_pubnames
-                  0x000000        0xdf6
+                  0x000000        0xe32
  *(.debug_pubnames)
  .debug_pubnames
                   0x000000         0x43 build/default/production/Libs/adc.o
@@ -1259,7 +1263,7 @@ __CONFIG1
  .debug_pubnames
                   0x0007e1         0xd3 build/default/production/Libs/uart2.o
  .debug_pubnames
-                  0x0008b4        0x542 build/default/production/main.o
+                  0x0008b4        0x57e build/default/production/main.o
 
 .debug_ranges
  *(.debug_ranges)
@@ -1904,7 +1908,7 @@ LOAD default_isr
 LOAD data_init
 
 .debug_pubtypes
-                  0x000120        0xd25
+                  0x000120        0xd44
  .debug_pubtypes
                   0x000120         0x7b build/default/production/Libs/adc.o
  .debug_pubtypes
@@ -1928,161 +1932,161 @@ LOAD data_init
  .debug_pubtypes
                   0x000c3d         0x6f build/default/production/Libs/uart2.o
  .debug_pubtypes
-                  0x000cac        0x199 build/default/production/main.o
+                  0x000cac        0x1b8 build/default/production/main.o
 
 __c30_signature
-                  0x000e45        0x1bc
+                  0x000e64        0x1bc
  __c30_signature
-                  0x000e45          0x6 build/default/production/Libs/adc.o
+                  0x000e64          0x6 build/default/production/Libs/adc.o
  __c30_signature
-                  0x000e4b          0x6 build/default/production/Libs/i2c1.o
+                  0x000e6a          0x6 build/default/production/Libs/i2c1.o
  __c30_signature
-                  0x000e51          0x6 build/default/production/Libs/i2c2.o
+                  0x000e70          0x6 build/default/production/Libs/i2c2.o
  __c30_signature
-                  0x000e57          0x6 build/default/production/Libs/ic.o
+                  0x000e76          0x6 build/default/production/Libs/ic.o
  __c30_signature
-                  0x000e5d          0x6 build/default/production/Libs/pwm.o
+                  0x000e7c          0x6 build/default/production/Libs/pwm.o
  __c30_signature
-                  0x000e63          0x6 build/default/production/Libs/spi1.o
+                  0x000e82          0x6 build/default/production/Libs/spi1.o
  __c30_signature
-                  0x000e69          0x6 build/default/production/Libs/spi2.o
+                  0x000e88          0x6 build/default/production/Libs/spi2.o
  __c30_signature
-                  0x000e6f          0x6 build/default/production/Libs/system.o
+                  0x000e8e          0x6 build/default/production/Libs/system.o
  __c30_signature
-                  0x000e75          0x6 build/default/production/Libs/timers.o
+                  0x000e94          0x6 build/default/production/Libs/timers.o
  __c30_signature
-                  0x000e7b          0x6 build/default/production/Libs/uart1.o
+                  0x000e9a          0x6 build/default/production/Libs/uart1.o
  __c30_signature
-                  0x000e81          0x6 build/default/production/Libs/uart2.o
+                  0x000ea0          0x6 build/default/production/Libs/uart2.o
  __c30_signature
-                  0x000e87          0x6 build/default/production/main.o
+                  0x000ea6          0x6 build/default/production/main.o
  __c30_signature
-                  0x000e8d          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\liblega-pic30-elf.a(crt0_standard.o)
+                  0x000eac          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\liblega-pic30-elf.a(crt0_standard.o)
  __c30_signature
-                  0x000e93          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\liblega-pic30-elf.a(data_init_standard.o)
+                  0x000eb2          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\liblega-pic30-elf.a(data_init_standard.o)
  __c30_signature
-                  0x000e99          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\liblega-pic30-elf.a(delay32.Leo)
+                  0x000eb8          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\liblega-pic30-elf.a(delay32.Leo)
  __c30_signature
-                  0x000e9f          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\libm-elf.a(addsf3.eo)
+                  0x000ebe          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\libm-elf.a(addsf3.eo)
  __c30_signature
-                  0x000ea5          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\libm-elf.a(divsf3.eo)
+                  0x000ec4          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\libm-elf.a(divsf3.eo)
  __c30_signature
-                  0x000eab          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\libm-elf.a(feqltle.eo)
+                  0x000eca          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\libm-elf.a(feqltle.eo)
  __c30_signature
-                  0x000eb1          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\libm-elf.a(fgtge.eo)
+                  0x000ed0          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\libm-elf.a(fgtge.eo)
  __c30_signature
-                  0x000eb7          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\libm-elf.a(fixsfsi.eo)
+                  0x000ed6          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\libm-elf.a(fixsfsi.eo)
  __c30_signature
-                  0x000ebd          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\libm-elf.a(fixunssfsi.eo)
+                  0x000edc          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\libm-elf.a(fixunssfsi.eo)
  __c30_signature
-                  0x000ec3          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\libm-elf.a(floatsisf.eo)
+                  0x000ee2          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\libm-elf.a(floatsisf.eo)
  __c30_signature
-                  0x000ec9          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\libm-elf.a(fpack.eo)
+                  0x000ee8          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\libm-elf.a(fpack.eo)
  __c30_signature
-                  0x000ecf          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\libm-elf.a(funpack.eo)
+                  0x000eee          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\libm-elf.a(funpack.eo)
  __c30_signature
-                  0x000ed5          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\libm-elf.a(funpack2.eo)
+                  0x000ef4          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\libm-elf.a(funpack2.eo)
  __c30_signature
-                  0x000edb          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\libm-elf.a(futil.eo)
+                  0x000efa          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\libm-elf.a(futil.eo)
  __c30_signature
-                  0x000ee1          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\libm-elf.a(mulsf3.eo)
+                  0x000f00          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\libm-elf.a(mulsf3.eo)
  __c30_signature
-                  0x000ee7          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\libm-elf.a(powf.eo)
+                  0x000f06          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\libm-elf.a(powf.eo)
  __c30_signature
-                  0x000eed          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\libm-elf.a(divmoddi3.eo)
+                  0x000f0c          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\libm-elf.a(divmoddi3.eo)
  __c30_signature
-                  0x000ef3          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\libm-elf.a(muldi3.eo)
+                  0x000f12          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\libm-elf.a(muldi3.eo)
  __c30_signature
-                  0x000ef9          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\libm-elf.a(_frexpf.eo)
+                  0x000f18          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\libm-elf.a(_frexpf.eo)
  __c30_signature
-                  0x000eff          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\libm-elf.a(errno.eo)
+                  0x000f1e          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\libm-elf.a(errno.eo)
  __c30_signature
-                  0x000f05          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\libm-elf.a(expf.eo)
+                  0x000f24          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\libm-elf.a(expf.eo)
  __c30_signature
-                  0x000f0b          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\libm-elf.a(fchop.eo)
+                  0x000f2a          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\libm-elf.a(fchop.eo)
  __c30_signature
-                  0x000f11          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\libm-elf.a(fcompare.eo)
+                  0x000f30          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\libm-elf.a(fcompare.eo)
  __c30_signature
-                  0x000f17          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\libm-elf.a(floatdisf.eo)
+                  0x000f36          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\libm-elf.a(floatdisf.eo)
  __c30_signature
-                  0x000f1d          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\libm-elf.a(floatundisf.eo)
+                  0x000f3c          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\libm-elf.a(floatundisf.eo)
  __c30_signature
-                  0x000f23          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\libm-elf.a(ldexpf.eo)
+                  0x000f42          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\libm-elf.a(ldexpf.eo)
  __c30_signature
-                  0x000f29          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\libm-elf.a(logf.eo)
+                  0x000f48          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\libm-elf.a(logf.eo)
  __c30_signature
-                  0x000f2f          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\libm-elf.a(umuldi3.eo)
+                  0x000f4e          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\libm-elf.a(umuldi3.eo)
  __c30_signature
-                  0x000f35          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\liblega-c-elf.a(strcmp.XX_eo)
+                  0x000f54          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\liblega-c-elf.a(strcmp.XX_eo)
  __c30_signature
-                  0x000f3b          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\liblega-c-elf.a(strcpy.XX_eo)
+                  0x000f5a          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\liblega-c-elf.a(strcpy.XX_eo)
  __c30_signature
-                  0x000f41          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\liblega-c-elf.a(strlen.XX_eo)
+                  0x000f60          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\liblega-c-elf.a(strlen.XX_eo)
  __c30_signature
-                  0x000f47          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\liblega-c-elf.a(strncmp.XX_eo)
+                  0x000f66          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\liblega-c-elf.a(strncmp.XX_eo)
  __c30_signature
-                  0x000f4d          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\liblega-c-elf.a(strncpy.XX_eo)
+                  0x000f6c          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\liblega-c-elf.a(strncpy.XX_eo)
  __c30_signature
-                  0x000f53          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\liblega-c-elf.a(printf_cdnopuxX.XXeo)
+                  0x000f72          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\liblega-c-elf.a(printf_cdnopuxX.XXeo)
  __c30_signature
-                  0x000f59          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\liblega-c-elf.a(sprintf_cdnopuxX.XXeo)
+                  0x000f78          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\liblega-c-elf.a(sprintf_cdnopuxX.XXeo)
  __c30_signature
-                  0x000f5f          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\liblega-c-elf.a(xprintf_cdnopuxX.XXeo)
+                  0x000f7e          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\liblega-c-elf.a(xprintf_cdnopuxX.XXeo)
  __c30_signature
-                  0x000f65          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\liblega-c-elf.a(xputfld_cdnopuxX.XXeo)
+                  0x000f84          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\liblega-c-elf.a(xputfld_cdnopuxX.XXeo)
  __c30_signature
-                  0x000f6b          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\liblega-c-elf.a(fwrite.XX_eo)
+                  0x000f8a          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\liblega-c-elf.a(fwrite.XX_eo)
  __c30_signature
-                  0x000f71          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\liblega-c-elf.a(memchr.XX_eo)
+                  0x000f90          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\liblega-c-elf.a(memchr.XX_eo)
  __c30_signature
-                  0x000f77          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\liblega-c-elf.a(memcpy.XX_eo)
+                  0x000f96          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\liblega-c-elf.a(memcpy.XX_eo)
  __c30_signature
-                  0x000f7d          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\liblega-c-elf.a(strchr.XX_eo)
+                  0x000f9c          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\liblega-c-elf.a(strchr.XX_eo)
  __c30_signature
-                  0x000f83          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\liblega-c-elf.a(xfiles.XX_eo)
+                  0x000fa2          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\liblega-c-elf.a(xfiles.XX_eo)
  __c30_signature
-                  0x000f89          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\liblega-c-elf.a(xfwprep.XX_eo)
+                  0x000fa8          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\liblega-c-elf.a(xfwprep.XX_eo)
  __c30_signature
-                  0x000f8f          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\liblega-c-elf.a(xlitob.XX_eo)
+                  0x000fae          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\liblega-c-elf.a(xlitob.XX_eo)
  __c30_signature
-                  0x000f95          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\liblega-c-elf.a(xputtxt.XX_eo)
+                  0x000fb4          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\liblega-c-elf.a(xputtxt.XX_eo)
  __c30_signature
-                  0x000f9b          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\liblega-c-elf.a(xvacopy.XX_eo)
+                  0x000fba          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\liblega-c-elf.a(xvacopy.XX_eo)
  __c30_signature
-                  0x000fa1          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\liblega-c-elf.a(fclose.XX_elo)
+                  0x000fc0          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\liblega-c-elf.a(fclose.XX_elo)
  __c30_signature
-                  0x000fa7          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\liblega-c-elf.a(fflush.XX_elo)
+                  0x000fc6          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\liblega-c-elf.a(fflush.XX_elo)
  __c30_signature
-                  0x000fad          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\liblega-c-elf.a(xatexit.XX_elo)
+                  0x000fcc          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\liblega-c-elf.a(xatexit.XX_elo)
  __c30_signature
-                  0x000fb3          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\liblega-c-elf.a(free.XX_eo)
+                  0x000fd2          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\liblega-c-elf.a(free.XX_eo)
  __c30_signature
-                  0x000fb9          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\liblega-c-elf.a(malloc.XX_eo)
+                  0x000fd8          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\liblega-c-elf.a(malloc.XX_eo)
  __c30_signature
-                  0x000fbf          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\liblega-c-elf.a(xgetmem.XX_eo)
+                  0x000fde          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\liblega-c-elf.a(xgetmem.XX_eo)
  __c30_signature
-                  0x000fc5          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\liblega-pic30-elf.a(close.Leo)
+                  0x000fe4          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\liblega-pic30-elf.a(close.Leo)
  __c30_signature
-                  0x000fcb          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\liblega-pic30-elf.a(write.Leo)
+                  0x000fea          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\liblega-pic30-elf.a(write.Leo)
  __c30_signature
-                  0x000fd1          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\liblega-pic30-elf.a(remove.Leo)
+                  0x000ff0          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\liblega-pic30-elf.a(remove.Leo)
  __c30_signature
-                  0x000fd7          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\liblega-pic30-elf.a(sbrk.Leo)
+                  0x000ff6          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\liblega-pic30-elf.a(sbrk.Leo)
  __c30_signature
-                  0x000fdd          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\liblega-pic30-elf.a(c30_uart.Leo)
+                  0x000ffc          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\liblega-pic30-elf.a(c30_uart.Leo)
  __c30_signature
-                  0x000fe3          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\liblega-pic30-elf.a(brk.Lelo)
+                  0x001002          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\liblega-pic30-elf.a(brk.Lelo)
  __c30_signature
-                  0x000fe9          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\libm-elf.a(divsi3.eo)
+                  0x001008          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\libm-elf.a(divsi3.eo)
  __c30_signature
-                  0x000fef          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\libm-elf.a(udivsi3.eo)
+                  0x00100e          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\libm-elf.a(udivsi3.eo)
  __c30_signature
-                  0x000ff5          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\libm-elf.a(umodsi3.eo)
+                  0x001014          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\libm-elf.a(umodsi3.eo)
  __c30_signature
-                  0x000ffb          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\libm-elf.a(mulsi3.eo)
+                  0x00101a          0x6 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\libm-elf.a(mulsi3.eo)
 
-.nbss               0x0800         0x4c
- .nbss              0x0800         0x28 build/default/production/main.o
+.nbss               0x0800         0x4e
+ .nbss              0x0800         0x2a build/default/production/main.o
                     0x0800                  _State
                     0x0802                  _SelectState
                     0x0804                  _counter
@@ -2108,93 +2112,95 @@ __c30_signature
                     0x0822                  _FATOR_CONTAGEM_GERAL
                     0x0824                  _counter_ch1
                     0x0826                  _CONTAGEM_MEDIA_VBAT
- .nbss              0x0828         0x14 build/default/production/Libs/timers.o
-                    0x0828                  _timer1
-                    0x082c                  _timer2
-                    0x0830                  _timer3
-                    0x0834                  _timer4
-                    0x0838                  _timer5
- .nbss              0x083c         0x10 build/default/production/Libs/ic.o
-                    0x083c                  _mode1
-                    0x083e                  _mode2
-                    0x0840                  _mode3
-                    0x0842                  _mode4
-                    0x0844                  _mode5
-                    0x0846                  _flag_IC1
-                    0x0847                  _flag_IC2
-                    0x0848                  _flag_IC3
-                    0x0849                  _flag_IC4
-                    0x084a                  _flag_IC5
+                    0x0828                  _flag_rx_protocol
+                    0x0829                  _flag_rx_protocol_received
+ .nbss              0x082a         0x14 build/default/production/Libs/timers.o
+                    0x082a                  _timer1
+                    0x082e                  _timer2
+                    0x0832                  _timer3
+                    0x0836                  _timer4
+                    0x083a                  _timer5
+ .nbss              0x083e         0x10 build/default/production/Libs/ic.o
+                    0x083e                  _mode1
+                    0x0840                  _mode2
+                    0x0842                  _mode3
+                    0x0844                  _mode4
+                    0x0846                  _mode5
+                    0x0848                  _flag_IC1
+                    0x0849                  _flag_IC2
+                    0x084a                  _flag_IC3
+                    0x084b                  _flag_IC4
+                    0x084c                  _flag_IC5
 
-.ndata              0x084c          0x8
- .ndata             0x084c          0x8 build/default/production/main.o
-                    0x084c                  _SelectStatus
-                    0x084e                  _lastState
-                    0x0850                  _PRESET_LOW_TEMP
-                    0x0852                  _PRESET_HIGH_TEMP
+.ndata              0x084e          0x8
+ .ndata             0x084e          0x8 build/default/production/main.o
+                    0x084e                  _SelectStatus
+                    0x0850                  _lastState
+                    0x0852                  _PRESET_LOW_TEMP
+                    0x0854                  _PRESET_HIGH_TEMP
 
-.nbss               0x0854          0xc
- .nbss              0x0854          0x6 build/default/production/Libs/pwm.o
-                    0x0854                  _PRx_value
-                    0x0858                  _Timer_Select_Global
- .nbss              0x085a          0x2 build/default/production/Libs/uart1.o
-                    0x085a                  _RX1_index
- .nbss              0x085c          0x2 build/default/production/Libs/uart2.o
-                    0x085c                  _RX2_index
- .nbss              0x085e          0x2 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\libm-elf.a(errno.eo)
-                    0x085e                  _errno
+.nbss               0x0856          0xc
+ .nbss              0x0856          0x6 build/default/production/Libs/pwm.o
+                    0x0856                  _PRx_value
+                    0x085a                  _Timer_Select_Global
+ .nbss              0x085c          0x2 build/default/production/Libs/uart1.o
+                    0x085c                  _RX1_index
+ .nbss              0x085e          0x2 build/default/production/Libs/uart2.o
+                    0x085e                  _RX2_index
+ .nbss              0x0860          0x2 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\libm-elf.a(errno.eo)
+                    0x0860                  _errno
 
-.bss                0x0860        0x7c0
- .bss               0x0860        0x630 build/default/production/main.o
-                    0x0860                  _buff
-                    0x0928                  _buffRX2
-                    0x09f0                  _RX_buff
-                    0x0a54                  _RX3_buff
-                    0x0d74                  _DACP
-                    0x0db0                  _AMP_SETPOINT_CHANNEL
-                    0x0dc0                  _AMP_ACTUAL_CHANNEL
-                    0x0dd0                  _AMP_CHANNEL
-                    0x0de0                  _PASSO_TENSAO_CHANNEL
-                    0x0df0                  _PASSO_RISE_CHANNEL
-                    0x0e00                  _PASSO_FALL_CHANNEL
-                    0x0e10                  _PRESETS_AMP
-                    0x0e20                  _PRESETS_ABERTURA
-                    0x0e30                  _PRESETS_PALMAR1
-                    0x0e40                  _PRESETS_PALMAR2
-                    0x0e50                  _PRESETS_LATERAL1
-                    0x0e60                  _PRESETS_LATERAL2
-                    0x0e70                  _PRESETS_EXTENSAO1
-                    0x0e80                  _PRESETS_EXTENSAO2
- .bss               0x0e90         0xc8 build/default/production/Libs/uart1.o
-                    0x0e90                  _RX1_buff
- .bss               0x0f58         0xc8 build/default/production/Libs/uart2.o
-                    0x0f58                  _RX2_buff
+.bss                0x0862        0x7c0
+ .bss               0x0862        0x630 build/default/production/main.o
+                    0x0862                  _buff
+                    0x092a                  _buffRX2
+                    0x09f2                  _RX_buff
+                    0x0a56                  _RX3_buff
+                    0x0d76                  _DACP
+                    0x0db2                  _AMP_SETPOINT_CHANNEL
+                    0x0dc2                  _AMP_ACTUAL_CHANNEL
+                    0x0dd2                  _AMP_CHANNEL
+                    0x0de2                  _PASSO_TENSAO_CHANNEL
+                    0x0df2                  _PASSO_RISE_CHANNEL
+                    0x0e02                  _PASSO_FALL_CHANNEL
+                    0x0e12                  _PRESETS_AMP
+                    0x0e22                  _PRESETS_ABERTURA
+                    0x0e32                  _PRESETS_PALMAR1
+                    0x0e42                  _PRESETS_PALMAR2
+                    0x0e52                  _PRESETS_LATERAL1
+                    0x0e62                  _PRESETS_LATERAL2
+                    0x0e72                  _PRESETS_EXTENSAO1
+                    0x0e82                  _PRESETS_EXTENSAO2
+ .bss               0x0e92         0xc8 build/default/production/Libs/uart1.o
+                    0x0e92                  _RX1_buff
+ .bss               0x0f5a         0xc8 build/default/production/Libs/uart2.o
+                    0x0f5a                  _RX2_buff
 
-.data               0x1020         0xee
- .data              0x1020         0x88 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\liblega-c-elf.a(xfiles.XX_eo)
-                    0x1020                  __Stdin
-                    0x1048                  __Stdout
-                    0x1070                  __Stderr
-                    0x1098                  __Files
- .data              0x10a8         0x2a build/default/production/main.o
-                    0x10a8                  _PROTOCOLO
- .data              0x10d2         0x22 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\liblega-c-elf.a(xlitob.XX_eo)
- .data              0x10f4         0x1a c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\liblega-c-elf.a(xprintf_cdnopuxX.XXeo)
+.data               0x1022         0xee
+ .data              0x1022         0x88 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\liblega-c-elf.a(xfiles.XX_eo)
+                    0x1022                  __Stdin
+                    0x104a                  __Stdout
+                    0x1072                  __Stderr
+                    0x109a                  __Files
+ .data              0x10aa         0x2a build/default/production/main.o
+                    0x10aa                  _PROTOCOLO
+ .data              0x10d4         0x22 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\liblega-c-elf.a(xlitob.XX_eo)
+ .data              0x10f6         0x1a c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\liblega-c-elf.a(xprintf_cdnopuxX.XXeo)
 
-.bss                0x110e          0x6
- .bss               0x110e          0x4 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\liblega-c-elf.a(malloc.XX_eo)
-                    0x110e                  __Aldata
- .bss               0x1112          0x2 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\liblega-c-elf.a(fclose.XX_elo)
+.bss                0x1110          0x6
+ .bss               0x1110          0x4 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\liblega-c-elf.a(malloc.XX_eo)
+                    0x1110                  __Aldata
+ .bss               0x1114          0x2 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\liblega-c-elf.a(fclose.XX_elo)
 
-.data               0x1114          0x4
- .data              0x1114          0x2 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\liblega-c-elf.a(malloc.XX_eo)
-                    0x1114                  __Size_block
- .data              0x1116          0x2 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\liblega-pic30-elf.a(c30_uart.Leo)
-                    0x1116                  ___C30_UART
+.data               0x1116          0x4
+ .data              0x1116          0x2 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\liblega-c-elf.a(malloc.XX_eo)
+                    0x1116                  __Size_block
+ .data              0x1118          0x2 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\liblega-pic30-elf.a(c30_uart.Leo)
+                    0x1118                  ___C30_UART
 
-.bss                0x1118          0x2
- .bss               0x1118          0x2 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\liblega-pic30-elf.a(brk.Lelo)
-                    0x1118                  ___curbrk
+.bss                0x111a          0x2
+ .bss               0x111a          0x2 c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\liblega-pic30-elf.a(brk.Lelo)
+                    0x111a                  ___curbrk
 
 .ivt._IC1Interrupt
                   0x000016          0x2
@@ -2273,89 +2279,89 @@ __c30_signature
  .ivt._T4Interrupt
                   0x00004a          0x2 build/default/production/main.o
 
-.const              0xb3a2       0x18b6 load address 0x0033a2  
- .const             0xb3a2       0x189a build/default/production/main.o
- .const             0xcc3c         0x10 build/default/production/Libs/uart2.o
- .const             0xcc4c          0xc build/default/production/Libs/uart1.o
+.const              0xb3a2       0x1956 load address 0x0033a2  
+ .const             0xb3a2       0x193a build/default/production/main.o
+ .const             0xccdc         0x10 build/default/production/Libs/uart2.o
+ .const             0xccec          0xc build/default/production/Libs/uart1.o
 
-.text             0x004c58       0x3f94
- .text            0x004c58       0x2f78 build/default/production/main.o
-                  0x004c58                  _MUXSelect
-                  0x004d10                  _MUXOff
-                  0x004d20                  _DAC_I2C
-                  0x004d46                  _Write_EEPROM
-                  0x005236                  _Read_EEPROM
-                  0x005760                  _Format_EEPROM
-                  0x0057e4                  _Show_EEPROM
-                  0x005ccc                  _I2Cread
-                  0x005cfc                  _UpdateChannel
-                  0x005d60                  _UpdateAmplitudes
-                  0x005e02                  _Verify_Protocol01
-                  0x006a7c                  _Init_Vars
-                  0x006b54                  _Rise_Ramp
-                  0x006c42                  _Step_Amp
-                  0x006d08                  _Request_VBAT
-                  0x006d6a                  _Verify_VBAT
-                  0x006dcc                  _Initializes_Equipment
-                  0x006e18                  _UpdateState
-                  0x0074ec                  _CheckONOFF
-                  0x00751c                  _Pulso
-                  0x007836                  __U2RXInterrupt
-                  0x007866                  _UART_Read_Data
-                  0x0078b8                  _Pulse300
-                  0x007926                  _Pulse_V0
-                  0x007988                  _Pulse
-                  0x0079ec                  __T1Interrupt
-                  0x007a40                  __T4Interrupt
-                  0x007a5e                  _main
- .text            0x007bd0        0x5ac build/default/production/Libs/system.o
-                  0x007bd0                  _System_Init
-                  0x007be0                  _InterruptPriority_set
-                  0x007c40                  _PPS
- .text            0x00817c        0x426 build/default/production/Libs/uart2.o
-                  0x00817c                  _UART2_set
-                  0x008230                  _UART2_Advanced_set
-                  0x0082cc                  _UART2_Send
-                  0x0082fe                  _UART2_Send_Decimal
-                  0x00831a                  _UART2_Send_Char
-                  0x008332                  _RX2_Start
-                  0x00833a                  _RX2_Stop
-                  0x008342                  _UART2_Receive
-                  0x0083fc                  _UART2_Receive_TimeOut
- .text            0x0085a2        0x398 build/default/production/Libs/pwm.o
-                  0x0085a2                  _PWM_Frequency
-                  0x008700                  _PWM_Init
-                  0x0088b0                  _PWM_Stop
- .text            0x00893a        0x160 build/default/production/Libs/i2c1.o
-                  0x00893a                  _I2C1_set
-                  0x008988                  _I2C1_Receive
-                  0x0089a0                  _I2C1_Repeated_Start
-                  0x0089be                  _I2C1_Start
-                  0x0089fa                  _I2C1_Stop
-                  0x008a18                  _I2C1_Send
-                  0x008a3c                  _I2C1_ACK
-                  0x008a6e                  _I2C1_StartOrRepeatedStartDetected
-                  0x008a84                  _I2C1_StopDetected
- .text            0x008a9a        0x152 build/default/production/Libs/i2c2.o
-                  0x008a9a                  _I2C2_set
-                  0x008ada                  _I2C2_Receive
-                  0x008af2                  _I2C2_Repeated_Start
-                  0x008b10                  _I2C2_Start
-                  0x008b4c                  _I2C2_Stop
-                  0x008b6a                  _I2C2_Send
-                  0x008b8e                  _I2C2_ACK
-                  0x008bc0                  _I2C2_StartOrRepeatedStartDetected
-                  0x008bd6                  _I2C2_StopDetected
+.text             0x004cf8       0x407a
+ .text            0x004cf8       0x305e build/default/production/main.o
+                  0x004cf8                  _MUXSelect
+                  0x004d96                  _MUXOff
+                  0x004da2                  _DAC_I2C
+                  0x004dc8                  _Write_EEPROM
+                  0x0052b8                  _Read_EEPROM
+                  0x0057e2                  _Format_EEPROM
+                  0x005866                  _Show_EEPROM
+                  0x005d4e                  _I2Cread
+                  0x005d7e                  _UpdateChannel
+                  0x005de2                  _UpdateAmplitudes
+                  0x005e84                  _Verify_Protocol01
+                  0x006afe                  _Verify_Protocol02
+                  0x006b5c                  _Init_Vars
+                  0x006c34                  _Rise_Ramp
+                  0x006d22                  _Step_Amp
+                  0x006de8                  _Request_VBAT
+                  0x006e4a                  _Verify_VBAT
+                  0x006eac                  _Initializes_Equipment
+                  0x006ef8                  _UpdateState
+                  0x0075cc                  _CheckONOFF
+                  0x0075fc                  _Pulso
+                  0x007916                  __U2RXInterrupt
+                  0x00798a                  _UART_Read_Data
+                  0x007a1a                  _Pulse_V0
+                  0x007a64                  _Pulse
+                  0x007ac8                  __T1Interrupt
+                  0x007b1c                  __T4Interrupt
+                  0x007b3a                  _main
+ .text            0x007d56        0x5ac build/default/production/Libs/system.o
+                  0x007d56                  _System_Init
+                  0x007d66                  _InterruptPriority_set
+                  0x007dc6                  _PPS
+ .text            0x008302        0x426 build/default/production/Libs/uart2.o
+                  0x008302                  _UART2_set
+                  0x0083b6                  _UART2_Advanced_set
+                  0x008452                  _UART2_Send
+                  0x008484                  _UART2_Send_Decimal
+                  0x0084a0                  _UART2_Send_Char
+                  0x0084b8                  _RX2_Start
+                  0x0084c0                  _RX2_Stop
+                  0x0084c8                  _UART2_Receive
+                  0x008582                  _UART2_Receive_TimeOut
+ .text            0x008728        0x398 build/default/production/Libs/pwm.o
+                  0x008728                  _PWM_Frequency
+                  0x008886                  _PWM_Init
+                  0x008a36                  _PWM_Stop
+ .text            0x008ac0        0x160 build/default/production/Libs/i2c1.o
+                  0x008ac0                  _I2C1_set
+                  0x008b0e                  _I2C1_Receive
+                  0x008b26                  _I2C1_Repeated_Start
+                  0x008b44                  _I2C1_Start
+                  0x008b80                  _I2C1_Stop
+                  0x008b9e                  _I2C1_Send
+                  0x008bc2                  _I2C1_ACK
+                  0x008bf4                  _I2C1_StartOrRepeatedStartDetected
+                  0x008c0a                  _I2C1_StopDetected
+ .text            0x008c20        0x152 build/default/production/Libs/i2c2.o
+                  0x008c20                  _I2C2_set
+                  0x008c60                  _I2C2_Receive
+                  0x008c78                  _I2C2_Repeated_Start
+                  0x008c96                  _I2C2_Start
+                  0x008cd2                  _I2C2_Stop
+                  0x008cf0                  _I2C2_Send
+                  0x008d14                  _I2C2_ACK
+                  0x008d46                  _I2C2_StartOrRepeatedStartDetected
+                  0x008d5c                  _I2C2_StopDetected
 
-.dinit            0x008bec        0x126
- .dinit           0x008bec        0x126 data_init
+.dinit            0x008d72        0x126
+ .dinit           0x008d72        0x126 data_init
 
-.text             0x008d12         0xa4
- .text            0x008d12         0xa4 build/default/production/Libs/adc.o
-                  0x008d12                  _ADC_set
-                  0x008d24                  _ADC_Advanced_set
-                  0x008d8c                  _Analog_Read
+.text             0x008e98         0xa4
+ .text            0x008e98         0xa4 build/default/production/Libs/adc.o
+                  0x008e98                  _ADC_set
+                  0x008eaa                  _ADC_Advanced_set
+                  0x008f12                  _Analog_Read
 
-.init.delay32     0x008db6         0x1c
- .init.delay32    0x008db6         0x1c c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\liblega-pic30-elf.a(delay32.Leo)
-                  0x008db6                  ___delay32
+.init.delay32     0x008f3c         0x1c
+ .init.delay32    0x008f3c         0x1c c:/program files (x86)/microchip/xc16/v1.30/bin/bin/../../lib\liblega-pic30-elf.a(delay32.Leo)
+                  0x008f3c                  ___delay32
