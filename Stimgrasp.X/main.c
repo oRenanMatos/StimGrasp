@@ -18,6 +18,9 @@
 #include "Libs/i2c1.h"
 #include <math.h>       /* pow */ 
 #include <time.h>
+#include <stdio.h>
+#include <stdbool.h>
+#include <string.h>
 
 #define PRX1 21
 #define PTX1 20
@@ -76,6 +79,51 @@ char contador = 0;
 
 int counter_T1 = 0;
 
+#define MAX_STRING_LENGTH 100
+#define MAX_BLOCK_LENGTH 50
+char block1[MAX_BLOCK_LENGTH];
+char block2[MAX_BLOCK_LENGTH];
+char block3[MAX_BLOCK_LENGTH];
+
+#define MAX_PULSES 10
+
+// Estrutura para armazenar as configurações de cada pulso
+typedef struct {
+    int i;
+    int s;
+    int p;
+    int d;
+    int a;
+    int np; //número de pulsos
+} PulseConfig;
+
+// Estrutura para armazenar as configurações de cada pulso para cada canal
+typedef struct {
+    PulseConfig CH0;
+    PulseConfig CH1;
+    PulseConfig CH2;
+    PulseConfig CH3;
+    PulseConfig CH4;
+    PulseConfig CH5;
+    PulseConfig CH6;
+    PulseConfig CH7;
+} PulseConfigChannel;
+
+
+// Função para inicializar as configurações de um pulso com valores padrão
+void initPulseConfig(PulseConfig* pulse) {
+    pulse->i = 1;
+    pulse->s = 1;
+    pulse->p = 1;
+    pulse->d = 1;
+    pulse->a = 1;
+    pulse->np = 0;
+}
+
+
+PulseConfigChannel outputs;
+PulseConfig pulses[MAX_PULSES];
+
 //#####################
 //# Variáveis globais #
 //#####################
@@ -127,7 +175,7 @@ volatile unsigned int CONTAGEM_MEDIA_VBAT = 0;
 volatile char flag_rx_protocol = 0;
 volatile char flag_rx_protocol_received = 0;
 
-
+volatile unsigned int ACTUAL_CHANNEL = 0;
 //####################################
 //#  Seleção de Canal do STIMGRASP   #
 //####################################
@@ -244,14 +292,12 @@ void MUXOff() {
 //####################################
 
 void DAC_I2C(unsigned int sample) {
-
     I2C1_Start();
     I2C1_Send(0xC8); // Device address A2 e A1 = 10 chip AQNN  e A0 = 0 portanto  
     I2C1_Send(0x40); // Internal Device address   
     I2C1_Send((sample & 0xFF0) >> 4); // Upper data bits          (D11.D10.D9.D8.D7.D6.D5.D4)
     I2C1_Send((sample & 0xF) << 4); //lower bits
     I2C1_Stop();
-
 }
 
 //###########################################
@@ -972,7 +1018,7 @@ void Show_EEPROM() {
     SUBADDRESS = 0;
     for (I = 1; I < 9; I++) {
         UART2_Send("Canal ");
-        UART2_Send_Decimal(I);
+        UART2_Send_Decimal(printf("%d",I));
         UART2_Send(": ");
 
         I2C1_Start();
@@ -1544,7 +1590,7 @@ void Verify_Protocol01(void) {
         FLAG_PALMAR_AUTOMATICO = 0;
         FLAG_EXTENSAO_AUTOMATICO = 0;
 
-
+        UpAmp=false;
         UART2_Send("\r\nStimgrasp: Comando de desligamento de canais recebido");
     }
 
@@ -1594,35 +1640,8 @@ void Verify_Protocol01(void) {
             AMP_SETPOINT_CHANNEL[i] = PRESETS_ABERTURA[i];
         }
 
-        /*  if(UpAmp){
-              UART2_Send("Finaliza  Sinal de Saída \r\n");
-              UART2_Send("Desabilita Fontes \r\n");
-              SHDN_POS=0;
-              SHDN_NEG=1;
-              UART2_Send("Dabilita Carga na Saída \r\n");
-              CARGA=0;
-              UART2_Send("Desliga Canal 0 \r\n");
-              MUXSelect(9);
-              UpAmp = false;
-          }
-          else{
-              SHDN_NEG=1;
-              SHDN_POS=0;
-              CARGA=0;
-              DAC_I2C(2048);
-              UART2_Send("Seleciona Canal 0 \r\n");
-              MUXSelect(0);
-              UART2_Send("Habilita Carga na Saída \r\n");
-              CARGA=1;
-              UART2_Send("Habilita Fontes \r\n");
-              SHDN_POS=1;
-              SHDN_NEG=0;
-              UART2_Send("Inicia Sinal de Saída \r\n");
-              UpAmp = true;
-          }*/
         SHDN_POS = 1; // Liga fonte +48V,+12V
         SHDN_NEG = 0; // Liga fonte -48V,-12V	
-
 
         //Step_Amp(); 		//Calcula um novo passo de tensão para os canais
         FLAG_STRING_AMP = 1;
@@ -2409,22 +2428,30 @@ int Request_VBAT() {
     Media_VBAT = Media_VBAT / Amostras;
     /*
     #ifdef	DEBUG
-    float Media_VBAT_Volts = (Media_VBAT*3.3)/1024;
+    float Media_VBAT_Volts = (Media_VBAT*5.5)/1024;
     int Numerator1000 = Media_VBAT_Volts * 1000;
     int Denominator = 1000;
     int Quotient = Numerator1000 / Denominator;
     int Rest = Numerator1000 % Denominator;
-    UART1_Send("Media_VBAT Value: ");
-    UART1_Send_Char(printf("%d",Media_VBAT));
-    UART1_Send("\r\n");
-    UART1_Send("Amostras Value: ");
-    UART1_Send_Char(printf("%d",Amostras));
-    UART1_Send("\r\n");
-    UART1_Send("Media_VBAT_Volts Value: ");
-    UART1_Send_Char(printf("%d,%d",Quotient,Rest));
-    UART1_Send("\r\n");
-    #endif*/
+
+    UART2_Send("Value: ");
+    UART2_Send_Decimal(value);
+    UART2_Send("\r\n");
+    UART2_Send("Media_VBAT Value: ");
+    UART2_Send_Decimal(Media_VBAT);
+    UART2_Send("\r\n");
+    UART2_Send("Amostras Value: ");
+    UART2_Send_Decimal(Amostras);
+    UART2_Send("\r\n");
+    UART2_Send("Media_VBAT_Volts Value: ");
+    UART2_Send_Decimal(Quotient);
+    UART2_Send(",");
+    UART2_Send_Decimal(Rest);
+    UART2_Send("\r\n");
+    #endif
+    */
     return Media_VBAT;
+   
 }
 
 //####################################
@@ -2438,7 +2465,7 @@ void Verify_VBAT() {
     equipamento não inicializa/inicia o desligamento.
      */
 
-    if (Request_VBAT() < 300) { //(560/1024)*4.20V = 2.30V #4.20V é tensão nominal da bateria
+    if (Request_VBAT() < 428) { //(560/1024)*4.20V = 2.30V #4.20V é tensão nominal da bateria
         PWM_Init(1, 100); // Apaga o LED RED
         PWM_Init(2, 100); // Apaga o LED GREEN
         BLUE = 1; // Apaga o LED BLUE		
@@ -2748,6 +2775,14 @@ void UpdateState() {
                 valueADC = Analog_Read(10);
                 valueADC = Analog_Read(10);
                 valueADC = Analog_Read(10);
+                valueADC = Analog_Read(10);
+                valueADC = Analog_Read(10);
+                valueADC = Analog_Read(10);
+                valueADC = Analog_Read(10);
+                valueADC = Analog_Read(10);
+                valueADC = Analog_Read(10);
+                valueADC = Analog_Read(10);
+                valueADC = Analog_Read(10);
                 UART1_Send("ADC Value: ");
                 UART1_Send_Char(printf("%d", valueADC));
                 UART1_Send("\r\n");
@@ -3021,352 +3056,6 @@ void CheckONOFF() {
     }
 }
 
-void Pulso() {
-    /*
-    10,0us por interrupção
-
-    TS210 metaltex
-    Ton máximo: 1,0ms
-    Toff máximo: 1,5ms
-     */
-
-
-    //  if(BLUE == 0) // Se o LED Azul estiver ligado
-    //   {
-    //      BLUE = 1; //Desliga o LED Azul
-    //   }
-    //  else    // Se o LED Azul estiver desligado
-    //  {
-    //       BLUE = 0; //Liga o LED Azul
-    //   }
-
-
-
-    switch (counter_ch1) {
-
-            //         ##########################
-            //         # ATUALIZAÇÃO DO CANAL 0 #
-            //         ##########################
-        case 1:
-        {
-            if (AMP_CHANNEL[0] != 0) //Se a amplitude é zero, nem seleciona o canal
-            {
-                MUXSelect(0); //Seleciona o canal 0
-            }
-            break;
-        }
-
-        case 101: // considerando 52us para a rotina de atualizar o DAC
-        {
-            if (AMP_CHANNEL[0] != 0) //Se a amplitude é zero, nem desliga a descarga
-            {
-                CARGA = 1; // Liga carga na saída
-            }
-            DAC_I2C(AMP_CHANNEL[0] + 2048);
-            break;
-        }
-
-        case 126:
-        {
-            if (AMP_CHANNEL[0] != 0) //Se a amplitude é zero, nem desliga a descarga
-            {
-                CARGA = 1; // Liga carga na saída
-            }
-            DAC_I2C(2048 - AMP_CHANNEL[0]);
-            break;
-        }
-
-        case 151: //considerando 52us para a rotina de atualizar o dAC
-        {
-            DAC_I2C(2048);
-            CARGA = 0; // Desliga carga na saída
-            MUXSelect(8); //Desliga canais
-            break;
-        }
-
-
-            //         ##########################
-            //         # ATUALIZAÇÃO DO CANAL 1 #
-            //         ##########################
-        case 311:
-        {
-            if (AMP_CHANNEL[1] != 0) {
-                MUXSelect(1); //Seleciona o canal 1
-            }
-            break;
-        }
-
-        case 411: // considerando 52us para a rotina de atualizar o DAC
-        {
-            if (AMP_CHANNEL[1] != 0) {
-                CARGA = 1; // Liga carga na saída
-            }
-            DAC_I2C(AMP_CHANNEL[1] + 2048);
-            break;
-        }
-
-        case 436:
-        {
-            if (AMP_CHANNEL[1] != 0) {
-                CARGA = 1; // Liga carga na saída
-            }
-            DAC_I2C(2048 - AMP_CHANNEL[1]);
-            break;
-        }
-
-        case 461: //considerando 52us para a rotina de atualizar o dAC
-        {
-            DAC_I2C(2048);
-            CARGA = 0; // Desliga carga na saída
-            MUXSelect(8); //Desliga canais
-            break;
-        }
-
-
-            //         ##########################
-            //         # ATUALIZAÇÃO DO CANAL 2 #
-            //         ##########################
-        case 621:
-        {
-            if (AMP_CHANNEL[2] != 0) {
-                MUXSelect(2); //Seleciona o canal 2
-            }
-            break;
-        }
-
-        case 721: // considerando 52us para a rotina de atualizar o DAC
-        {
-            if (AMP_CHANNEL[2] != 0) {
-                CARGA = 1; // Liga carga na saída
-            }
-            DAC_I2C(AMP_CHANNEL[2] + 2048);
-            break;
-        }
-
-        case 746:
-        {
-            if (AMP_CHANNEL[2] != 0) {
-                CARGA = 1; // Liga carga na saída
-            }
-            DAC_I2C(2048 - AMP_CHANNEL[2]);
-            break;
-        }
-
-        case 771: //considerando 52us para a rotina de atualizar o dAC
-        {
-            DAC_I2C(2048);
-            CARGA = 0; // Desliga carga na saída
-            MUXSelect(8); //Desliga canais
-            break;
-        }
-
-
-            //         ##########################
-            //         # ATUALIZAÇÃO DO CANAL 3 #
-            //         ##########################
-        case 931:
-        {
-            if (AMP_CHANNEL[3] != 0) {
-                MUXSelect(3); //Seleciona o canal 3
-            }
-            break;
-        }
-
-        case 1031: // considerando 52us para a rotina de atualizar o DAC
-        {
-            if (AMP_CHANNEL[3] != 0) {
-                CARGA = 1; // Liga carga na saída
-            }
-            DAC_I2C(AMP_CHANNEL[3] + 2048);
-            break;
-        }
-
-        case 1056:
-        {
-            if (AMP_CHANNEL[3] != 0) {
-                CARGA = 1; // Liga carga na saída
-            }
-            DAC_I2C(2048 - AMP_CHANNEL[3]);
-            break;
-        }
-
-        case 1081: //considerando 52us para a rotina de atualizar o dAC
-        {
-            DAC_I2C(2048);
-            CARGA = 0; // Desliga carga na saída
-            MUXSelect(8); //Desliga canais
-            break;
-        }
-
-
-            //         ##########################
-            //         # ATUALIZAÇÃO DO CANAL 4 #
-            //         ##########################
-        case 1241:
-        {
-            if (AMP_CHANNEL[4] != 0) {
-                MUXSelect(4); //Seleciona o canal 4
-            }
-            break;
-        }
-
-        case 1341: // considerando 52us para a rotina de atualizar o DAC
-        {
-            if (AMP_CHANNEL[4] != 0) {
-                CARGA = 1; // Liga carga na saída
-            }
-            DAC_I2C(AMP_CHANNEL[4] + 2048);
-            break;
-        }
-
-        case 1366:
-        {
-            if (AMP_CHANNEL[4] != 0) {
-                CARGA = 1; // Liga carga na saída
-            }
-            DAC_I2C(2048 - AMP_CHANNEL[4]);
-            break;
-        }
-
-        case 1391: //considerando 52us para a rotina de atualizar o dAC
-        {
-            DAC_I2C(2048);
-            CARGA = 0; // Desliga carga na saída
-            MUXSelect(8); //Desliga canais
-            break;
-        }
-
-
-            //         ##########################
-            //         # ATUALIZAÇÃO DO CANAL 5 #
-            //         ##########################
-        case 1551:
-        {
-            if (AMP_CHANNEL[5] != 0) {
-                MUXSelect(5); //Seleciona o canal 5
-            }
-            break;
-        }
-
-        case 1651: // considerando 52us para a rotina de atualizar o DAC
-        {
-            if (AMP_CHANNEL[5] != 0) {
-                CARGA = 1; // Liga carga na saída
-            }
-            DAC_I2C(AMP_CHANNEL[5] + 2048);
-            break;
-        }
-
-        case 1676:
-        {
-            if (AMP_CHANNEL[5] != 0) {
-                CARGA = 1; // Liga carga na saída
-            }
-            DAC_I2C(2048 - AMP_CHANNEL[5]);
-            break;
-        }
-
-        case 1701: //considerando 52us para a rotina de atualizar o dAC
-        {
-            DAC_I2C(2048);
-            CARGA = 0; // Desliga carga na saída
-            MUXSelect(8); //Desliga canais
-            break;
-        }
-
-
-            //         ##########################
-            //         # ATUALIZAÇÃO DO CANAL 6 #
-            //         ##########################
-        case 1861:
-        {
-            if (AMP_CHANNEL[6] != 0) {
-                MUXSelect(6); //Seleciona o canal 6
-            }
-            break;
-        }
-
-        case 1961: // considerando 52us para a rotina de atualizar o DAC
-        {
-            if (AMP_CHANNEL[6] != 0) {
-                CARGA = 1; // Liga carga na saída
-            }
-            DAC_I2C(AMP_CHANNEL[6] + 2048);
-            break;
-        }
-
-        case 1986:
-        {
-            if (AMP_CHANNEL[6] != 0) {
-                CARGA = 1; // Liga carga na saída
-            }
-            DAC_I2C(2048 - AMP_CHANNEL[6]);
-            break;
-        }
-
-        case 2011: //considerando 52us para a rotina de atualizar o dAC
-        {
-            DAC_I2C(2048);
-            CARGA = 0; // Desliga carga na saída
-            MUXSelect(8); //Desliga canais
-            break;
-        }
-
-            //         ##########################
-            //         # ATUALIZAÇÃO DO CANAL 7 #
-            //         ##########################
-        case 2171:
-        {
-            if (AMP_CHANNEL[7] != 0) {
-                MUXSelect(7); //Seleciona o canal 7
-            }
-            break;
-        }
-
-        case 2271: // considerando 52us para a rotina de atualizar o DAC
-        {
-            if (AMP_CHANNEL[7] != 0) {
-                CARGA = 1; // Liga carga na saída
-            }
-            DAC_I2C(AMP_CHANNEL[7] + 2048);
-            break;
-        }
-
-        case 2296:
-        {
-            if (AMP_CHANNEL[7] != 0) {
-                CARGA = 1; // Liga carga na saída
-            }
-            DAC_I2C(2048 - AMP_CHANNEL[7]);
-            break;
-        }
-
-        case 2321: //considerando 52us para a rotina de atualizar o dAC
-        {
-            DAC_I2C(2048);
-            CARGA = 0; // Desliga carga na saída
-            MUXSelect(8); //Desliga canais
-            break;
-        }
-
-
-            //         ########################
-            //         # REINÍCIO DE CONTAGEM #
-            //         ########################
-        case 4999:
-        {
-            counter_ch1 = 0;
-            break;
-        }
-
-        default:
-        {
-            break;
-        }
-
-    }
-}
-
 void __attribute__((interrupt, no_auto_psv)) _U2RXInterrupt() {
     /* Check for receive errors */
     if (U2STAbits.FERR == 1) {
@@ -3386,20 +3075,229 @@ void __attribute__((interrupt, no_auto_psv)) _U2RXInterrupt() {
         RX_buff[RX_index] = U2RXREG; //Read the received data from buffer
     }
 
-
+/*
     if (RX_buff[RX_index] == '>') {
         flag_string = 1;
         UART2_Send("Dado Recebido\r\n");
-    }
+    }*/
 
     RX_index++; //Increment the index
+    
+    if (RX_buff[RX_index - 1] == '\n') { // Verifica se é o fim da string (novos dados sempre terminam com '\n')
+        RX_buff[RX_index - 1] = '\0'; // Substitui o '\n' por '\0' para indicar o final da string
+        flag_string = 1; // Reseta a flag
+        UART2_Send("Dado Recebido\r\n");    
+    }
     IFS1bits.U2RXIF = false; //Clear the interrupt flag
+}
+
+int SeparatePulses(char* str, PulseConfig* pulses, int max_pulses) {
+    int count = 0;
+    int pulse_count = 0;
+    PulseConfig pulse;
+    initPulseConfig(&pulse);
+    int i = 0;
+
+
+    // Loop para contar os caracteres
+    while (str[count] != '\0') {
+        count++;
+    }
+    
+    while (i < count) {
+        while (str[i] != '*' && i < count) {
+            if (str[i] == 'i' && str[i + 1] == '|') {
+                UART2_Send_Char(str[i]);
+                UART2_Send_Char(str[i + 1]);
+                if(str[i+3]==','){
+                    pulse.i = (int)str[i + 2] - 48;
+                    UART2_Send_Char(str[i + 2]);
+                }
+                else if(str[i+4]==',') {
+                    pulse.i = ((int) str[i + 2] - 48)*10 + ((int) str[i + 3] - 48);
+                    UART2_Send_Char(str[i + 2]);
+                    UART2_Send_Char(str[i + 3]);
+                }   
+                UART2_Send("\r\n");
+            } else if (str[i] == 's' && str[i + 1] == '|') {
+                UART2_Send_Char(str[i]);
+                UART2_Send_Char(str[i + 1]);
+                if (str[i + 3] == ',') {
+                    pulse.s = (int) str[i + 2] - 48;
+                    UART2_Send_Char(str[i + 2]);
+                } else if (str[i + 4] == ',') {
+                    pulse.s = ((int) str[i + 2] - 48)*10 + ((int) str[i + 3] - 48);
+                    UART2_Send_Char(str[i + 2]);
+                    UART2_Send_Char(str[i + 3]);
+                }   
+                UART2_Send("\r\n");
+            } else if (str[i] == 'p' && str[i + 1] == '|') {
+                UART2_Send_Char(str[i]);
+                UART2_Send_Char(str[i + 1]);
+                if (str[i + 3] == ',') {
+                    pulse.p = (int) str[i + 2] - 48;
+                    UART2_Send_Char(str[i + 2]);
+                } else if (str[i + 4] == ',') {
+                    pulse.p = ((int) str[i + 2] - 48)*10 + ((int) str[i + 3] - 48);
+                    UART2_Send_Char(str[i + 2]);
+                    UART2_Send_Char(str[i + 3]);
+                }   
+                UART2_Send("\r\n");
+            } else if (str[i] == 'd' && str[i + 1] == '|') {
+                UART2_Send_Char(str[i]);
+                UART2_Send_Char(str[i + 1]);
+                if (str[i + 3] == ',') {
+                    pulse.d = (int) str[i + 2] - 48;
+                    UART2_Send_Char(str[i + 2]);
+                } else if (str[i + 4] == ',') {
+                    pulse.d = ((int) str[i + 2] - 48)*10 + ((int) str[i + 3] - 48);
+                    UART2_Send_Char(str[i + 2]);
+                    UART2_Send_Char(str[i + 3]);
+                }   
+                UART2_Send("\r\n");
+            } else if (str[i] == 'a' && str[i + 1] == '|') {
+                UART2_Send_Char(str[i]);
+                UART2_Send_Char(str[i + 1]);
+                if (str[i + 3] == ',') {
+                    pulse.a = (int) str[i + 2] - 48;
+                    UART2_Send_Char(str[i + 2]);
+                } else if (str[i + 4] == ',') {
+                    pulse.a = ((int) str[i + 2] - 48)*10 + ((int) str[i + 3] - 48);
+                    UART2_Send_Char(str[i + 2]);
+                    UART2_Send_Char(str[i + 3]);
+                }   
+                UART2_Send("\r\n");
+            }
+            i++;
+        }
+
+        i++;
+        // Adicione a configuração do pulso ao vetor
+       
+        pulses[pulse_count] = pulse;
+        pulse_count++;
+
+        // Se chegarmos ao limite máximo de pulsos, pare de processar
+        if (pulse_count == max_pulses) {
+            break;
+        }
+    }
+    pulse = pulses[0];
+    pulse.np = pulse_count;
+    pulses[0] = pulse;
+    return pulse_count;
+}
+
+void SeparateCommands(int current_channel, char* block){
+    
+    switch(current_channel){
+        case 0:
+            SeparatePulses(block, pulses, MAX_PULSES);
+            outputs.CH0 = pulses[MAX_PULSES];
+            break;
+        case 1:
+            SeparatePulses(block, pulses, MAX_PULSES);
+            outputs.CH1 = pulses[MAX_PULSES];
+            break;
+        case 2:
+            SeparatePulses(block, pulses, MAX_PULSES);
+            outputs.CH2 = pulses[MAX_PULSES];
+            break;
+        case 3:
+            SeparatePulses(block, pulses, MAX_PULSES);
+            outputs.CH3 = pulses[MAX_PULSES];
+            break;
+        case 4:
+            SeparatePulses(block, pulses, MAX_PULSES);
+            outputs.CH4 = pulses[MAX_PULSES];
+            break;
+        case 5:
+            SeparatePulses(block, pulses, MAX_PULSES);
+            outputs.CH5 = pulses[MAX_PULSES];
+            break;
+        case 6:
+            SeparatePulses(block, pulses, MAX_PULSES);
+            outputs.CH6 = pulses[MAX_PULSES];
+            break;
+        case 7:
+            SeparatePulses(block, pulses, MAX_PULSES);
+            outputs.CH7 = pulses[MAX_PULSES];
+            break;
+        default:
+            break;
+    }
+}
+
+void SeparateBlocks() {
+    int i = 0, j = 0, k =0;   
+    // Bloco1: os primeiros caracteres representam a operação (comando numérico)
+    while (RX_buff[i] != 'c' && i < RX_index) {
+        block1[j] = RX_buff[i];
+        i++;
+        j++;
+    }
+    block1[j] = '\0'; // Adicione o terminador de string ao bloco1
+    UART2_Send("block1: ");
+    UART2_Send(block1);
+    UART2_Send("\r\n");
+    // Bloco2: começa após o primeiro 'c' e vai até o último ')' antes do bloco3
+    UART2_Send("block2: \n");
+    int current_channel = 0; // Variável para rastrear o canal atual (c1, c2, c3, etc.)
+
+    while (i < RX_index) {
+        // Verifica se o caractere atual é um 'c'
+        if (RX_buff[i] == 'c') {
+            current_channel = RX_buff[i + 1]; // Obtem o valor do canal (1 a 8)
+            i += 2; // Pula o 'c' e o dígito do canal
+
+            // Encontre o início do bloco de configuração atual '('
+            while (RX_buff[i] != '(' && i < RX_index) {
+                i++; // Pule outros caracteres até encontrar '('
+            }
+
+            // Avance para o início do bloco de configuração atual
+            i++;
+
+            // Armazene as configurações do canal atual no bloco correspondente
+            j = 0;
+            while (RX_buff[i] != ')' && i < RX_index) {
+                block2[j] = RX_buff[i];
+                i++;
+                j++;
+            }
+            block2[j] = '\0'; // Adicione o terminador de string ao bloco3
+            UART2_Send("c");
+            UART2_Send_Char(current_channel);
+            UART2_Send(": ");
+            UART2_Send(block2);
+            UART2_Send("\r\n");
+
+            SeparateCommands(current_channel-49, block2);
+            k=i;
+        } else {
+            i++; // Pule caracteres que não são relevantes para o bloco de configuração
+        }
+    }
+    i=k;
+    i++; // Avance para o início do checksum
+    // Bloco3: começa após o último ')' e vai até o final da string
+    j = 0;
+    while (i < RX_index) {
+        block3[j] = RX_buff[i];
+        i++;
+        j++;
+    }
+    block3[j] = '\0'; // Adicione o terminador de string ao bloco3
+   
+    UART2_Send("block3: ");
+    UART2_Send(block3);
+    UART2_Send("\r\n");
 }
 
 void UART_Read_Data() {
     UART2_Send("UART_Read_Data()\r\n");
-    if (RX_index == 41) {
-        if (RX_buff[0] == '<' && RX_buff[1] == 'S' && RX_buff[2] == 'T' && RX_buff[3] == 'I' && RX_buff[4] == 'M') {
+    if (RX_buff[0] == '<' && RX_buff[1] == 'S' && RX_buff[2] == 'T' && RX_buff[3] == 'I' && RX_buff[4] == 'M') {
+           UART2_Send("Protocolo 01 - Recebido\r\n");
             strcpy(PROTOCOLO, RX_buff);
             /* UART2_Send("\r\n");
               UART2_Send(PROTOCOLO);
@@ -3408,273 +3306,255 @@ void UART_Read_Data() {
                UART2_Send("\r\n");
                UART2_Send_Char(PROTOCOLO[12]);*/
             FLAG_STRING_RECEBIDA = 1;
-        }
-    } else if (RX_buff[0] == '<' || RX_buff[2] == 'C') {
-        UART2_Send("<*******\r\n");
+    } 
+    else {
+        UART2_Send("Protocolo 02 - Recebido\r\n");
         strcpy(PROTOCOLO, RX_buff);
+        SeparateBlocks();
         // UART2_Send(PROTOCOLO);
-        flag_rx_protocol_received = 1;
-        FLAG_STRING_RECEBIDA = 1;
+        //flag_rx_protocol_received = 1;
+       // FLAG_STRING_RECEBIDA = 1;
     }
 
-    UART2_Send("RX_index: \r\n");
+    UART2_Send("RX_index: ");
     UART2_Send_Decimal(RX_index);
-    UART2_Send("RX_buff[0]: \r\n");
+    UART2_Send("\r\n");
+    UART2_Send("RX_buff[0]: ");
     UART2_Send_Char(RX_buff[0]);
-
+    UART2_Send("\r\n");
     RX_buff[0] = '\0';
     RX_index = 0;
 }
 
 void Pulse_V0(int ponto) {
-
-    //-**************** CANAL 00 *********************
-    //Seleciona o canal 0
-    if (ponto == 1) {
-        MUXSelect(0);
-        CARGA = 0;
+    //Um incremento a cada 100 us
+    switch (ACTUAL_CHANNEL) {
+        case 0:
+            //-**************** CANAL 00 *********************
+            //Seleciona o canal 0
+            if (ponto == 1) {
+                MUXSelect(0);
+                CARGA = 0;
+            }                
+            //Aguarda 1000us e aciona o canal 0
+            else if (ponto == 10) {
+                CARGA = 1;
+                DAC_I2C(2048 + AMP_CHANNEL[ACTUAL_CHANNEL]);
+            }  
+            //Aguarda 300us e inverte a saída do canal 0
+            else if (ponto == 13) {
+                CARGA = 1;
+                DAC_I2C(2048 - AMP_CHANNEL[ACTUAL_CHANNEL]);
+            }                
+            //Aguarda 300us e desliga a saída do canal 0
+            else if (ponto == 16) {
+                DAC_I2C(2048);
+                CARGA = 0; 
+                 MUXSelect(8);
+                ACTUAL_CHANNEL=1;
+            }
+            break;
+            
+        //-**************** CANAL 01 *********************
+        case 1:
+            //Aguarda 1500us e seleciona o canal 1    
+             if (ponto == 31) {
+                MUXSelect(1);
+                CARGA = 0;
+            }
+        //Aguarda 1000us e aciona o canal 1
+            else if (ponto == 41) {
+                CARGA = 1;
+                DAC_I2C(3048);
+            }
+        //Aguarda 300us e inverte a saída do canal 1
+            else if (ponto == 44) {
+                CARGA = 1;
+                DAC_I2C(1048);
+            }
+        //Aguarda 300us e desliga a saída do canal 1
+            else if (ponto == 47) {
+                DAC_I2C(2048);
+                CARGA = 0;
+                MUXSelect(8);
+                ACTUAL_CHANNEL=2;
+            }
+           break;
+            
+        //-**************** CANAL 02 *********************    
+        case 2:
+            //Aguarda 1500us e seleciona o canal 2
+            if (ponto == 62) {
+                MUXSelect(2);
+                CARGA = 0;
+            }
+            //Aguarda 1000us e aciona o canal 2
+            else if (ponto == 72) {
+                CARGA = 1;
+                DAC_I2C(3048);
+            }
+            //Aguarda 300us e inverte a saída do canal 2
+            else if (ponto == 75) {
+                CARGA = 1;
+                DAC_I2C(1048);
+            }
+            //Aguarda 300us e desliga a saída do canal 2
+            else if (ponto == 78) {
+                DAC_I2C(2048);
+                CARGA = 0;
+                MUXSelect(8);
+               ACTUAL_CHANNEL=3;
+            }
+            break;
+        //-**************** CANAL 03 *********************
+        case 3:
+            //Aguarda 1500us e seleciona o canal 3
+            if (ponto == 93) {
+                MUXSelect(3);
+                CARGA = 0;
+            } 
+            //Aguarda 1000us e aciona o canal 3
+            else if (ponto == 103) {
+                CARGA = 1;
+                DAC_I2C(3048);
+            } 
+            //Aguarda 300us e inverte a saída do canal 3
+            else if (ponto == 106) {
+                CARGA = 1;
+                DAC_I2C(1048);
+            } 
+            //Aguarda 300us e desliga a saída do canal 3
+            else if (ponto == 109) {
+                DAC_I2C(2048);
+                CARGA = 0;       
+                MUXSelect(8);
+                ACTUAL_CHANNEL=4;
+                
+            }
+           break;
+        //-**************** CANAL 04 *********************
+        case 4:
+            //Aguarda 1500us e seleciona o canal 4
+            if (ponto == 124) {
+                MUXSelect(4);
+                CARGA = 0;
+            } 
+            //Aguarda 1000us e aciona o canal 4
+            else if (ponto == 134) {
+                CARGA = 1;
+                DAC_I2C(3048);
+            } 
+            //Aguarda 300us e inverte a saída do canal 4
+            else if (ponto == 137) {
+                CARGA = 1;
+                DAC_I2C(1048);
+            } 
+            //Aguarda 300us e desliga a saída do canal 4
+            else if (ponto == 140) {
+                DAC_I2C(2048);  
+                CARGA = 0;                   
+                MUXSelect(8);
+                ACTUAL_CHANNEL=5;
+                 
+            }
+          break;
+        //-**************** CANAL 05 *********************
+        case 5:
+            //Aguarda 1500us e seleciona o canal 5
+            if (ponto == 155) {
+                MUXSelect(5);
+                CARGA = 0;
+            } 
+            //Aguarda 1000us e aciona o canal 5
+            else if (ponto == 165) {
+                CARGA = 1;
+                DAC_I2C(3048);
+            } 
+            //Aguarda 300us e inverte a saída do canal 5
+            else if (ponto == 168) {
+                CARGA = 1;
+                DAC_I2C(1048);
+            } 
+            //Aguarda 300us e desliga a saída do canal 5
+            else if (ponto == 171) {
+                DAC_I2C(2048);
+                CARGA = 0;
+                MUXSelect(8);
+               ACTUAL_CHANNEL=6;
+                
+            }
+            break;
+        //-**************** CANAL 06 *********************    
+       case 6:
+            //Aguarda 1500us e seleciona o canal 6
+            if (ponto == 186) {
+                MUXSelect(6);
+                CARGA = 0;
+            } 
+            //Aguarda 1000us e aciona o canal 6
+            else if (ponto == 196) {
+                CARGA = 1;
+                DAC_I2C(3048);
+            } 
+            //Aguarda 300us e inverte a saída do canal 6
+            else if (ponto == 199) {
+                CARGA = 1;
+                DAC_I2C(1048);
+            } 
+            //Aguarda 300us e desliga a saída do canal 6
+            else if (ponto == 202) {
+                DAC_I2C(2048);
+                CARGA = 0;                
+                MUXSelect(8);
+                ACTUAL_CHANNEL=7;
+            }
+          break;
+        //-**************** CANAL 07 *********************
+       case 7:
+            //Aguarda 1500us e seleciona o canal 7
+            if (ponto == 217) {
+                MUXSelect(7);
+                CARGA = 0;
+            } 
+            //Aguarda 1000us e aciona o canal 7
+            else if (ponto == 227) {
+                CARGA = 1;
+                DAC_I2C(3048);;
+            } 
+            //Aguarda 300us e inverte a saída do canal 7
+            else if (ponto == 230) {
+                CARGA = 1;
+                DAC_I2C(1048);
+            } 
+            //Aguarda 300us e desliga a saída do canal 7
+            else if (ponto == 233) {
+                DAC_I2C(2048);
+                CARGA = 0;                
+                MUXSelect(8);
+                ACTUAL_CHANNEL=9;
+            }
+            break;
+        default:
+            break;
     }
-    //Aguarda 1000us e aciona o canal 0
-    if (ponto == 101) {
-        CARGA = 1;
-        DAC_I2C(4095);
-    }
-    //Aguarda 300us e inverte a saída do canal 0
-    if (ponto == 131) {
-        CARGA = 1;
-        DAC_I2C(1);
-    }
-    //Aguarda 300us e desliga a saída do canal 0
-    if (ponto == 161) {
 
-        CARGA = 0;
-        DAC_I2C(2048);
-        MUXOff();
-    }
-
-       /*
-    //-**************** CANAL 01 *********************
-    //Aguarda 1500us e seleciona o canal 1
-    if (ponto == 311) {
-        MUXSelect(1);
-        CARGA = 0;
-    }
-    //Aguarda 1000us e aciona o canal 1
-    if (ponto == 411) {
-        CARGA = 1;
-        DAC_I2C(3048);
-    }
-    //Aguarda 300us e inverte a saída do canal 1
-    if (ponto == 441) {
-        CARGA = 1;
-        DAC_I2C(1048);
-    }
-    //Aguarda 300us e desliga a saída do canal 1
-    if (ponto == 471) {
-
-        CARGA = 0;
-        DAC_I2C(2048);
-        MUXOff();
-    }
-
-    //-**************** CANAL 02 *********************
-    //Aguarda 1500us e seleciona o canal 2
-    if (ponto == 621) {
-        MUXSelect(2);
-        CARGA = 0;
-    }
-    //Aguarda 1000us e aciona o canal 2
-    if (ponto == 721) {
-        CARGA = 1;
-        DAC_I2C(3048);
-    }
-    //Aguarda 300us e inverte a saída do canal 2
-    if (ponto == 751) {
-        CARGA = 1;
-        DAC_I2C(1048);
-    }
-    //Aguarda 300us e desliga a saída do canal 2
-    if (ponto == 781) {
-        CARGA = 0;
-        DAC_I2C(2048);
-        MUXOff();
-    }
-
-
-    //-**************** CANAL 03 *********************
-    //Aguarda 1500us e seleciona o canal 3
-    if (ponto == 931) {
-        MUXSelect(3);
-        CARGA = 0;
-    }
-    //Aguarda 1000us e aciona o canal 3
-    if (ponto == 1031) {
-        CARGA = 1;
-        DAC_I2C(3048);
-    }
-    //Aguarda 300us e inverte a saída do canal 3
-    if (ponto == 1061) {
-        CARGA = 1;
-        DAC_I2C(1048);
-    }
-    //Aguarda 300us e desliga a saída do canal 3
-    if (ponto == 1091) {
-
-        CARGA = 0;
-        DAC_I2C(2048);
-        MUXOff();
-    }
-
- 
-        
-//-**************** CANAL 04 *********************
-//Aguarda 1500us e seleciona o canal 4
-if (ponto == 1241) {
-    MUXSelect(4);
-    CARGA = 0;
-}
- //Aguarda 1000us e aciona o canal 4
-if (ponto == 1341) {
-    CARGA = 1;
-    DAC_I2C(3048);
-}
-//Aguarda 300us e inverte a saída do canal 4
-if (ponto == 1371) {
-    CARGA = 1;
-    DAC_I2C(1048);
-}
-//Aguarda 300us e desliga a saída do canal 4
-if (ponto == 1401) {
-
-    CARGA = 0;
-    DAC_I2C(2048);
-    MUXOff();
-}
-
- 
-       
-//-**************** CANAL 05 *********************
-//Aguarda 1500us e seleciona o canal 5
-if (ponto == 1551) {
-    MUXSelect(5);
-    CARGA = 0;
-}
- //Aguarda 1000us e aciona o canal 5
-if (ponto == 1651) {
-    CARGA = 1;
-    DAC_I2C(3048);
-}
-//Aguarda 300us e inverte a saída do canal 5
-if (ponto == 1681) {
-    CARGA = 1;
-    DAC_I2C(1048);
-}
-//Aguarda 300us e desliga a saída do canal 5
-if (ponto == 1711) {
-
-    CARGA = 0;
-    DAC_I2C(2048);
-    MUXOff();
-}
-
-//-**************** CANAL 06 *********************
-//Aguarda 1500us e seleciona o canal 6
-if (ponto == 1861) {
-    MUXSelect(6);
-    CARGA = 0;
-}
- //Aguarda 1000us e aciona o canal 6
-if (ponto == 1961) {
-    CARGA = 1;
-    DAC_I2C(3048);
-}
-//Aguarda 300us e inverte a saída do canal 6
-if (ponto == 1991) {
-    CARGA = 1;
-    DAC_I2C(1048);
-}
-//Aguarda 300us e desliga a saída do canal 6
-if (ponto == 2021) {
-
-    CARGA = 0;
-    DAC_I2C(2048);
-    MUXOff();
-}
-
-//-**************** CANAL 07 *********************
-    
-//Aguarda 1500us e seleciona o canal 7
-if (ponto == 2171) {
-    MUXSelect(7);
-    CARGA = 0;
-}
- //Aguarda 1000us e aciona o canal 7
-if (ponto == 2271) {
-    CARGA = 1;
-    DAC_I2C(3048);
-}
-//Aguarda 300us e inverte a saída do canal 7
-if (ponto == 2301) {
-    CARGA = 1;
-    DAC_I2C(1048);
-}
-//Aguarda 300us e desliga a saída do canal 7
-if (ponto == 2331) {
-
-    CARGA = 0;
-    DAC_I2C(2048);
-    MUXOff();
-}
-     */
-    if (ponto == 3300) {
+    if (ponto == 500) {
         counter_T1 = 0;
+        ACTUAL_CHANNEL = 0;
         //UpAmp = false;
     }
-}
 
-void Pulse(int ponto) {
-
-    if (ponto == 1) {
-        MUXSelect(0);
-    }
-
-    if (ponto > 0 && ponto <= 19) {
-        DAC_I2C(2048);
-        CARGA = 0;
-    }
-
-    if (ponto > 19 && ponto <= 25) {
-        CARGA = 1;
-        DAC_I2C(4094);
-    }
-
-    if (ponto > 25 && ponto <= 31) {
-        CARGA = 1;
-        DAC_I2C(1);
-    }
-
-    if (ponto == 32) {
-        MUXSelect(9);
-        DAC_I2C(2048);
-        CARGA = 0;
-    }
-
-    if (ponto == 5000) {
-        counter_T1 = 0;
-        //UpAmp = false;
-    }
 }
 
 void __attribute__((__interrupt__, __shadow__, no_auto_psv)) _T1Interrupt(void) {
+    //10us
     CheckONOFF();
-    counter_ch1++;
-
 
     FATOR_CONTAGEM_GERAL++;
     if (FATOR_CONTAGEM_GERAL >= 10000) {
         FATOR_CONTAGEM_GERAL = 0;
         FLAG_RAMPA = 1; // Estoura a cada 10000x10us = 100ms
-        // FLAG_HABILITA_VBAT = 1;
+       // FLAG_HABILITA_VBAT = 1;
     }
 
     CONTAGEM_MEDIA_VBAT++;
@@ -3682,34 +3562,19 @@ void __attribute__((__interrupt__, __shadow__, no_auto_psv)) _T1Interrupt(void) 
     {
         // UART2_Send("..... Serial Comunication ....\r\n");
         CONTAGEM_MEDIA_VBAT = 0;
-        // FLAG_MEDIA_VBAT = 1;     // Hora de pegar uma amostra
+       // FLAG_MEDIA_VBAT = 1;     // Hora de pegar uma amostra
     }
-
-    if (UpAmp) {
-        counter_T1++;
-        Pulse_V0(counter_T1);
-    }
-
-    //Pulso();
-    /*  FATOR_CONTAGEM_GERAL++;
-      if(FATOR_CONTAGEM_GERAL >= 10000)
-      {
-               FATOR_CONTAGEM_GERAL = 0;
-               FLAG_RAMPA = 1;     // Estoura a cada 10000x10us = 100ms
-               FLAG_HABILITA_VBAT = 1;
-      }
-   
-
-     */
-
 
     IFS0bits.T1IF = 0; //Reset Timer1 interrupt flag and Return from ISR   
 }
 
 void __attribute__((interrupt, no_auto_psv)) _T4Interrupt() //Timer4 Interrupt
 {
-    /* Interrupt Service Routine code goes here */
-    CheckONOFF();
+     //100us
+    if (UpAmp) {
+       counter_T1++;
+       Pulse_V0(counter_T1);
+    }
 
     IFS1bits.T4IF = false;
 }
@@ -3747,7 +3612,7 @@ int main(void) {
 
 
     Timer2_set(0.001, 16); //Set Timer2 as a 1ms timer before use this as a PWM
-    Timer4_set(0.001, 16); //Set Timer2 as a 1ms timer before use this as a PWM
+    Timer4_set(0.0004, 16); 
     PWM_Frequency(2, 980); //Uses Timer2 to set a 1kHz PWM
     PWM_Init(1, 99);
     PWM_Init(2, 99);
@@ -3783,26 +3648,13 @@ int main(void) {
     I2C1_set(100000);
 
 
-    int i;
-    for (i = 0; i < 30; ++i) {
-        int ponto = i;
-        double tau = 10e-6;
-        double Amp = 1.97;
-        double time = ponto * 10 * 1e-6;
-        double value1 = (Amp * (1 - pow(2.71, -1 * (time / tau)))) + 1.65;
-        double value2 = value1 - (3.3 / 2);
-        int value3 = (value2 / 3.3) * 4096;
-        DACP[i] = value3;
-    }
-
-
     Initializes_Equipment();
 
 
     UART1_Send("Testando UART2 recebimento dados - UART1 \r\n");
     UART2_Send("Testando UART2 recebimento dados - UART2 \r\n");
 
-
+   
 
     BLUE = 0;
     __delay_ms(1000);
@@ -3813,13 +3665,15 @@ int main(void) {
     BLUE = 1;
 
 
+  Timer4_Start();
+  
 
     while (1) {
 
 #ifdef RUN
-
         //verificação e chamada da rotina de tratamento de dado serial, a partir de
         //flag gerado na interrupção serial, em recebendo um bloco válido
+
 
         if (flag_string == 1) {
             flag_string = 0;
@@ -3843,12 +3697,12 @@ int main(void) {
 
         if (FLAG_MEDIA_VBAT == 1) //Já esta na hora de colher uma nova amostra?
         {
-            //   Request_VBAT();
+            //  Request_VBAT();
         }
 
         if (FLAG_HABILITA_VBAT == 1) //Já passou o delay do início do programa?
         {
-            //    Verify_VBAT();
+          //   Verify_VBAT();
         }
 
         //rotina de rampa de subida

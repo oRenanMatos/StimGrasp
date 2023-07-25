@@ -89,7 +89,7 @@ void UART2_Send(char *sendBuffer) {
 }
 
 
-void UART2_Send_Decimal(char decimalNumber){
+void UART2_Send_Decimal(int decimalNumber){
     char str[30];
     sprintf(str, "%d", decimalNumber);
     UART2_Send(str);
