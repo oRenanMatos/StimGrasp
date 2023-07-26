@@ -49,6 +49,7 @@
 
 #define DEBUG
 #define RUN
+//#define DEBUG_UART1
 
 
 unsigned int State = 0;
@@ -94,20 +95,9 @@ typedef struct {
     int p;
     int d;
     int a;
+    int r;
     int np; //número de pulsos
 } PulseConfig;
-
-// Estrutura para armazenar as configurações de cada pulso para cada canal
-typedef struct {
-    PulseConfig CH0;
-    PulseConfig CH1;
-    PulseConfig CH2;
-    PulseConfig CH3;
-    PulseConfig CH4;
-    PulseConfig CH5;
-    PulseConfig CH6;
-    PulseConfig CH7;
-} PulseConfigChannel;
 
 
 // Função para inicializar as configurações de um pulso com valores padrão
@@ -117,12 +107,38 @@ void initPulseConfig(PulseConfig* pulse) {
     pulse->p = 1;
     pulse->d = 1;
     pulse->a = 1;
+    pulse->r = 1;
     pulse->np = 0;
 }
 
 
-PulseConfigChannel outputs;
-PulseConfig pulses[MAX_PULSES];
+//PulseConfig pulses[MAX_PULSES];
+PulseConfig pulsesCH0[MAX_PULSES];
+PulseConfig pulsesCH1[MAX_PULSES];
+PulseConfig pulsesCH2[MAX_PULSES];
+PulseConfig pulsesCH3[MAX_PULSES];
+PulseConfig pulsesCH4[MAX_PULSES];
+PulseConfig pulsesCH5[MAX_PULSES];
+PulseConfig pulsesCH6[MAX_PULSES];
+PulseConfig pulsesCH7[MAX_PULSES];
+
+
+// Declaração do enum
+enum StateOfPulse {
+    INICIO,      // 0
+    PLATO,       // 1
+    SUBIDA,      // 2
+    DESCIDA,     // 3
+};
+
+enum StateOfPulse StateCH0 = INICIO;
+enum StateOfPulse StateCH1 = PLATO;
+enum StateOfPulse StateCH2 = SUBIDA;
+enum StateOfPulse StateCH3 = DESCIDA;
+enum StateOfPulse StateCH4 = PLATO;
+enum StateOfPulse StateCH5 = INICIO;
+enum StateOfPulse StateCH6 = DESCIDA;
+enum StateOfPulse StateCH7 = SUBIDA;
 
 //#####################
 //# Variáveis globais #
@@ -176,6 +192,13 @@ volatile char flag_rx_protocol = 0;
 volatile char flag_rx_protocol_received = 0;
 
 volatile unsigned int ACTUAL_CHANNEL = 0;
+/*
+void UART2_Send_Decimal(int decimalNumber){
+    char str[30];
+    sprintf(str, "%d", decimalNumber);
+    UART2_Send(str);
+}*/
+
 //####################################
 //#  Seleção de Canal do STIMGRASP   #
 //####################################
@@ -2229,65 +2252,6 @@ void Verify_Protocol01(void) {
 //#		  Protocolo Novo		 #
 //################################
 
-void Verify_Protocol02(void) {
-    UART2_Send("Verify_Protocol02()\r\n");
-    /*
-     * Comando 01 - Shutdown do estimulador
-     * Comando 02 - Resposta padrão
-     * Comando 03 - Atualização imediata de canais
-     * Comando 04 - Iniciar
-     * Comando 05 - Pausar
-     * Comando 06 - Stop
-
-
-     *
-     * Valor 00 - Transforma e armazena os presets das 7 rampas de subida
-     * Valor 01 - Transforma e armazena os presets das 7 rampas de descida
-     * Valor 02 - Transforma e armazena os presets de amplitude da abertura de mão
-     * Valor 03 - Transforma e armazena os presets de amplitude do estágio 1 da preensão palmar
-     * Valor 04 - Transforma e armazena os presets de amplitude do estágio 2 da preensão palmar
-     * Valor 05 - Transforma e armazena os presets de amplitude do estágio 1 da preensão lateral
-     * Valor 06 - Transforma e armazena os presets de amplitude do estágio 2 da preensão lateral
-     * Valor 07 - Transforma e armazena os presets de amplitude do estágio 1 da extensão do indicador
-     * Valor 08 - Transforma e armazena os presets de amplitude do estágio 2 da extensão do indicador
-     */
-
-    // Comando 01
-    // Shutdown do estimulador
-    if (PROTOCOLO[1] == '1') {
-        UART2_Send("Comando 01 - Shutdown do estimulador\r\n");
-    }
-
-    // Comando 02
-    // Resposta padrão
-    if (PROTOCOLO[1] == '2') {
-        UART2_Send("Comando 02 - Resposta padrao\r\n");
-    }
-
-    // Comando 04
-    // Iniciar
-    if (PROTOCOLO[1] == '4') {
-        UART2_Send("Comando 04 - Iniciar\r\n");
-    }
-
-    // Comando 05
-    // Pausar
-    if (PROTOCOLO[1] == '5') {
-        UART2_Send("Comando 05 - Pausar\r\n");
-    }
-
-    // Comando 06
-    // Stop
-    if (PROTOCOLO[1] == '6') {
-        UART2_Send("Comando 06 - Stop\r\n");
-    }
-
-    // Comando 03
-    // Atualização imediata de canais
-    if (PROTOCOLO[1] == '3') {
-        UART2_Send("Comando 03 - Atualizacao imediata de canais\r\n");
-    }
-}
 
 void Init_Vars() {
     int i;
@@ -2516,6 +2480,7 @@ void Initializes_Equipment() {
     DAC_I2C(2048); //Aplica 0V na saída	SINAL_ON = 0;		//Desliga o equipamento
 }
 
+#ifdef DEBUG_UART1
 void UpdateState() {
 
     switch (State) {
@@ -3041,6 +3006,7 @@ void UpdateState() {
             break;
     }
 }
+#endif
 
 void CheckONOFF() {
     if (PowerON) {
@@ -3075,19 +3041,23 @@ void __attribute__((interrupt, no_auto_psv)) _U2RXInterrupt() {
         RX_buff[RX_index] = U2RXREG; //Read the received data from buffer
     }
 
-/*
-    if (RX_buff[RX_index] == '>') {
-        flag_string = 1;
-        UART2_Send("Dado Recebido\r\n");
-    }*/
+
+   
 
     RX_index++; //Increment the index
-    
+
     if (RX_buff[RX_index - 1] == '\n') { // Verifica se é o fim da string (novos dados sempre terminam com '\n')
-        RX_buff[RX_index - 1] = '\0'; // Substitui o '\n' por '\0' para indicar o final da string
+        if (RX_buff[RX_index-2] == '>') {
+            RX_buff[RX_index - 1] = '\0';
+        }
+        else {
+            RX_buff[RX_index - 1] = '#';
+            RX_buff[RX_index] = '\0'; // Substitui o '\n' por '\0' para indicar o final da string
+        }
         flag_string = 1; // Reseta a flag
-        UART2_Send("Dado Recebido\r\n");    
+        UART2_Send("Dado Recebido\r\n");
     }
+    
     IFS1bits.U2RXIF = false; //Clear the interrupt flag
 }
 
@@ -3097,8 +3067,6 @@ int SeparatePulses(char* str, PulseConfig* pulses, int max_pulses) {
     PulseConfig pulse;
     initPulseConfig(&pulse);
     int i = 0;
-
-
     // Loop para contar os caracteres
     while (str[count] != '\0') {
         count++;
@@ -3107,66 +3075,90 @@ int SeparatePulses(char* str, PulseConfig* pulses, int max_pulses) {
     while (i < count) {
         while (str[i] != '*' && i < count) {
             if (str[i] == 'i' && str[i + 1] == '|') {
-                UART2_Send_Char(str[i]);
-                UART2_Send_Char(str[i + 1]);
-                if(str[i+3]==','){
+               // UART2_Send_Char(str[i]);
+              //  UART2_Send_Char(str[i + 1]);
+                if(str[i+3]==',' || str[i+3]=='*' || str[i+3]=='\0'){
                     pulse.i = (int)str[i + 2] - 48;
-                    UART2_Send_Char(str[i + 2]);
+                //    UART2_Send_Char(str[i + 2]);
                 }
-                else if(str[i+4]==',') {
+                else if(str[i+4]==',' || str[i+4]=='*' || str[i+4]=='\0'  ) {
                     pulse.i = ((int) str[i + 2] - 48)*10 + ((int) str[i + 3] - 48);
-                    UART2_Send_Char(str[i + 2]);
-                    UART2_Send_Char(str[i + 3]);
+                //    UART2_Send_Char(str[i + 2]);
+               ///     UART2_Send_Char(str[i + 3]);
                 }   
-                UART2_Send("\r\n");
+             //   UART2_Send("\r\n");
             } else if (str[i] == 's' && str[i + 1] == '|') {
-                UART2_Send_Char(str[i]);
-                UART2_Send_Char(str[i + 1]);
-                if (str[i + 3] == ',') {
-                    pulse.s = (int) str[i + 2] - 48;
-                    UART2_Send_Char(str[i + 2]);
-                } else if (str[i + 4] == ',') {
+              //  UART2_Send_Char(str[i]);
+              //  UART2_Send_Char(str[i + 1]);
+                 if(str[i+3]==',' || str[i+3]=='*' || str[i+3]=='\0'){
+                    pulse.s = (int)str[i + 2] - 48;
+                //    UART2_Send_Char(str[i + 2]);
+                }
+                else if(str[i+4]==',' || str[i+4]=='*' || str[i+4]=='\0'  )
+                {
                     pulse.s = ((int) str[i + 2] - 48)*10 + ((int) str[i + 3] - 48);
-                    UART2_Send_Char(str[i + 2]);
-                    UART2_Send_Char(str[i + 3]);
+               //     UART2_Send_Char(str[i + 2]);
+               //     UART2_Send_Char(str[i + 3]);
                 }   
-                UART2_Send("\r\n");
+              //  UART2_Send("\r\n");
             } else if (str[i] == 'p' && str[i + 1] == '|') {
-                UART2_Send_Char(str[i]);
-                UART2_Send_Char(str[i + 1]);
-                if (str[i + 3] == ',') {
-                    pulse.p = (int) str[i + 2] - 48;
-                    UART2_Send_Char(str[i + 2]);
-                } else if (str[i + 4] == ',') {
+               // UART2_Send_Char(str[i]);
+               // UART2_Send_Char(str[i + 1]);
+                 if(str[i+3]==',' || str[i+3]=='*' || str[i+3]=='\0'){
+                    pulse.p = (int)str[i + 2] - 48;
+                 //   UART2_Send_Char(str[i + 2]);
+                } 
+                else if(str[i+4]==',' || str[i+4]=='*' || str[i+4]=='\0'  )
+                {
                     pulse.p = ((int) str[i + 2] - 48)*10 + ((int) str[i + 3] - 48);
-                    UART2_Send_Char(str[i + 2]);
-                    UART2_Send_Char(str[i + 3]);
+                 //   UART2_Send_Char(str[i + 2]);
+                //    UART2_Send_Char(str[i + 3]);
                 }   
-                UART2_Send("\r\n");
+               // UART2_Send("\r\n");
             } else if (str[i] == 'd' && str[i + 1] == '|') {
-                UART2_Send_Char(str[i]);
-                UART2_Send_Char(str[i + 1]);
-                if (str[i + 3] == ',') {
-                    pulse.d = (int) str[i + 2] - 48;
-                    UART2_Send_Char(str[i + 2]);
-                } else if (str[i + 4] == ',') {
+               // UART2_Send_Char(str[i]);
+              //  UART2_Send_Char(str[i + 1]);
+                if(str[i+3]==',' || str[i+3]=='*' || str[i+3]=='\0'){
+                    pulse.d = (int)str[i + 2] - 48;
+               //     UART2_Send_Char(str[i + 2]);
+                }
+                 else if(str[i+4]==',' || str[i+4]=='*' || str[i+4]=='\0'  )
+                {
                     pulse.d = ((int) str[i + 2] - 48)*10 + ((int) str[i + 3] - 48);
-                    UART2_Send_Char(str[i + 2]);
-                    UART2_Send_Char(str[i + 3]);
+                //    UART2_Send_Char(str[i + 2]);
+                //    UART2_Send_Char(str[i + 3]);
                 }   
-                UART2_Send("\r\n");
+               // UART2_Send("\r\n");
             } else if (str[i] == 'a' && str[i + 1] == '|') {
-                UART2_Send_Char(str[i]);
-                UART2_Send_Char(str[i + 1]);
-                if (str[i + 3] == ',') {
-                    pulse.a = (int) str[i + 2] - 48;
-                    UART2_Send_Char(str[i + 2]);
-                } else if (str[i + 4] == ',') {
+               // UART2_Send_Char(str[i]);
+              //  UART2_Send_Char(str[i + 1]);
+                 if(str[i+3]==',' || str[i+3]=='*' || str[i+3]=='\0'){
+                    pulse.a = (int)str[i + 2] - 48;
+               //     UART2_Send_Char(str[i + 2]);
+                } 
+                 else if(str[i+4]==',' || str[i+4]=='*' || str[i+4]=='\0'  )
+                {
                     pulse.a = ((int) str[i + 2] - 48)*10 + ((int) str[i + 3] - 48);
-                    UART2_Send_Char(str[i + 2]);
-                    UART2_Send_Char(str[i + 3]);
+               //     UART2_Send_Char(str[i + 2]);
+                //    UART2_Send_Char(str[i + 3]);
                 }   
-                UART2_Send("\r\n");
+             //   UART2_Send("\r\n");
+            }
+            
+             else if (str[i] == 'r' && str[i + 1] == '|') {
+               // UART2_Send_Char(str[i]);
+              //  UART2_Send_Char(str[i + 1]);
+                if(str[i+3]==',' || str[i+3]=='*' || str[i+3]=='\0'){
+                    pulse.r = (int)str[i + 2] - 48;
+               //     UART2_Send_Char(str[i + 2]);
+                } 
+                else if(str[i+4]==',' || str[i+4]=='*' || str[i+4]=='\0'  )
+                {
+                    pulse.r = ((int) str[i + 2] - 48)*10 + ((int) str[i + 3] - 48);
+               //     UART2_Send_Char(str[i + 2]);
+                //    UART2_Send_Char(str[i + 3]);
+                }   
+             //   UART2_Send("\r\n");
             }
             i++;
         }
@@ -3182,9 +3174,11 @@ int SeparatePulses(char* str, PulseConfig* pulses, int max_pulses) {
             break;
         }
     }
+    
     pulse = pulses[0];
     pulse.np = pulse_count;
     pulses[0] = pulse;
+       
     return pulse_count;
 }
 
@@ -3192,40 +3186,56 @@ void SeparateCommands(int current_channel, char* block){
     
     switch(current_channel){
         case 0:
-            SeparatePulses(block, pulses, MAX_PULSES);
-            outputs.CH0 = pulses[MAX_PULSES];
+            SeparatePulses(block, pulsesCH0, MAX_PULSES);
             break;
         case 1:
-            SeparatePulses(block, pulses, MAX_PULSES);
-            outputs.CH1 = pulses[MAX_PULSES];
+            SeparatePulses(block, pulsesCH1, MAX_PULSES);
+            int i;
+            int num_pulses = pulsesCH1[0].np;
+            for (i = 0; i < num_pulses; i++) {
+                UART2_Send("Pulso ");
+                UART2_Send_Decimal(i + 1);
+                UART2_Send("\n");
+                UART2_Send("i: ");
+                UART2_Send_Decimal(pulsesCH1[i].i);
+                UART2_Send(", s: ");
+                UART2_Send_Decimal(pulsesCH1[i].s);
+                UART2_Send(", p: ");
+                UART2_Send_Decimal(pulsesCH1[i].p);
+                UART2_Send(", d: ");
+                UART2_Send_Decimal(pulsesCH1[i].d);
+                UART2_Send(", a: ");
+                UART2_Send_Decimal(pulsesCH1[i].a);
+                UART2_Send(", r: ");
+                UART2_Send_Decimal(pulsesCH1[i].r);
+                UART2_Send(" pulsos: ");
+                UART2_Send_Decimal(pulsesCH1[0].np);
+                UART2_Send("\n");
+            }
+
             break;
         case 2:
-            SeparatePulses(block, pulses, MAX_PULSES);
-            outputs.CH2 = pulses[MAX_PULSES];
+            SeparatePulses(block, pulsesCH2, MAX_PULSES);
             break;
         case 3:
-            SeparatePulses(block, pulses, MAX_PULSES);
-            outputs.CH3 = pulses[MAX_PULSES];
+            SeparatePulses(block, pulsesCH3, MAX_PULSES);
             break;
         case 4:
-            SeparatePulses(block, pulses, MAX_PULSES);
-            outputs.CH4 = pulses[MAX_PULSES];
+            SeparatePulses(block, pulsesCH4, MAX_PULSES);
             break;
         case 5:
-            SeparatePulses(block, pulses, MAX_PULSES);
-            outputs.CH5 = pulses[MAX_PULSES];
+            SeparatePulses(block, pulsesCH5, MAX_PULSES);
             break;
         case 6:
-            SeparatePulses(block, pulses, MAX_PULSES);
-            outputs.CH6 = pulses[MAX_PULSES];
+            SeparatePulses(block, pulsesCH6, MAX_PULSES);
             break;
         case 7:
-            SeparatePulses(block, pulses, MAX_PULSES);
-            outputs.CH7 = pulses[MAX_PULSES];
+            SeparatePulses(block, pulsesCH7, MAX_PULSES);
             break;
         default:
             break;
     }
+    
 }
 
 void SeparateBlocks() {
@@ -3237,11 +3247,11 @@ void SeparateBlocks() {
         j++;
     }
     block1[j] = '\0'; // Adicione o terminador de string ao bloco1
-    UART2_Send("block1: ");
-    UART2_Send(block1);
-    UART2_Send("\r\n");
+   // UART2_Send("block1: ");
+   // UART2_Send(block1);
+  //  UART2_Send("\r\n");
     // Bloco2: começa após o primeiro 'c' e vai até o último ')' antes do bloco3
-    UART2_Send("block2: \n");
+  //  UART2_Send("block2: \n");
     int current_channel = 0; // Variável para rastrear o canal atual (c1, c2, c3, etc.)
 
     while (i < RX_index) {
@@ -3266,11 +3276,11 @@ void SeparateBlocks() {
                 j++;
             }
             block2[j] = '\0'; // Adicione o terminador de string ao bloco3
-            UART2_Send("c");
-            UART2_Send_Char(current_channel);
-            UART2_Send(": ");
-            UART2_Send(block2);
-            UART2_Send("\r\n");
+    //        UART2_Send("c");
+    //        UART2_Send_Char(current_channel);
+   //         UART2_Send(": ");
+    //        UART2_Send(block2);
+    //        UART2_Send("\r\n");
 
             SeparateCommands(current_channel-49, block2);
             k=i;
@@ -3287,15 +3297,193 @@ void SeparateBlocks() {
         i++;
         j++;
     }
-    block3[j] = '\0'; // Adicione o terminador de string ao bloco3
+    block3[j-1] = '\0'; // Adicione o terminador de string ao bloco3
    
-    UART2_Send("block3: ");
-    UART2_Send(block3);
-    UART2_Send("\r\n");
+  //  UART2_Send("block3: ");
+  //  UART2_Send(block3);
+  //  UART2_Send("\r\n");
+}
+
+void Pulse_V1(){
+    switch (StateCH0) {
+        case INICIO:
+            UART2_Send("StateCH0 esta em INICIO.\n");
+            break;
+        case PLATO:
+            UART2_Send("StateCH0 esta em PLATO.\n");
+            PulseConfig pulse;
+            initPulseConfig(&pulse);
+            pulse = pulsesCH0[0];
+            int num_pulses = pulsesCH0[0].np;
+            int i;
+
+            for (i = 0; i < num_pulses; i++) {
+                UART2_Send("Pulso ");
+                UART2_Send_Decimal(i + 1);
+                UART2_Send("\n");
+                UART2_Send("i: ");
+                UART2_Send_Decimal(pulsesCH0[i].i);
+                UART2_Send(", s: ");
+                UART2_Send_Decimal(pulsesCH0[i].s);
+                UART2_Send(", p: ");
+                UART2_Send_Decimal(pulsesCH0[i].p);
+                UART2_Send(", d: ");
+                UART2_Send_Decimal(pulsesCH0[i].d);
+                UART2_Send(", a: ");
+                UART2_Send_Decimal(pulsesCH0[i].a);
+                UART2_Send(", r: ");
+                UART2_Send_Decimal(pulsesCH0[i].r);
+                UART2_Send(" pulsos: ");
+                UART2_Send_Decimal(pulsesCH0[0].np);
+                UART2_Send("\n");
+            }
+            break;
+        case SUBIDA:
+            UART2_Send("StateCH0 esta em SUBIDA.\n");
+            break;
+        case DESCIDA:
+            UART2_Send("StateCH0 esta em DESCIDA.\n");
+            break;
+        default:
+            break;
+    }
+    
+   
+    switch (StateCH1) {
+        case INICIO:
+            UART2_Send("StateCH1 esta em INICIO.\n");
+            break;
+        case PLATO:
+            UART2_Send("StateCH1 esta em PLATO.\n");
+            break;
+        case SUBIDA:
+            UART2_Send("StateCH1 esta em SUBIDA.\n");
+            break;
+        case DESCIDA:
+            UART2_Send("StateCH1 esta em DESCIDA.\n");
+            break;
+        default:
+            break;
+    }
+    
+      
+    switch (StateCH2) {
+        case INICIO:
+            UART2_Send("StateCH2 esta em INICIO.\n");
+            break;
+        case PLATO:
+            UART2_Send("StateCH2 esta em PLATO.\n");
+            break;
+        case SUBIDA:
+            UART2_Send("StateCH2 esta em SUBIDA.\n");
+            break;
+        case DESCIDA:
+            UART2_Send("StateCH2 esta em DESCIDA.\n");
+            break;
+        default:
+            break;
+    }
+    
+        
+    switch (StateCH3) {
+        case INICIO:
+            UART2_Send("StateCH3 esta em INICIO.\n");
+            break;
+        case PLATO:
+            UART2_Send("StateCH3 esta em PLATO.\n");
+            break;
+        case SUBIDA:
+            UART2_Send("StateCH3 esta em SUBIDA.\n");
+            break;
+        case DESCIDA:
+            UART2_Send("StateCH3 esta em DESCIDA.\n");
+            break;
+        default:
+            break;
+    }
+    
+
+    switch (StateCH4) {
+        case INICIO:
+            UART2_Send("StateCH4 esta em INICIO.\n");
+            break;
+        case PLATO:
+            UART2_Send("StateCH4 esta em PLATO.\n");
+            break;
+        case SUBIDA:
+            UART2_Send("StateCH4 esta em SUBIDA.\n");
+            break;
+        case DESCIDA:
+            UART2_Send("StateCH4 esta em DESCIDA.\n");
+            break;
+        default:
+            break;
+    }
+    
+
+    switch (StateCH5) {
+        case INICIO:
+            UART2_Send("StateCH5 esta em INICIO.\n");
+            break;
+        case PLATO:
+            UART2_Send("StateCH5 esta em PLATO.\n");
+            break;
+        case SUBIDA:
+            UART2_Send("StateCH5 esta em SUBIDA.\n");
+            break;
+        case DESCIDA:
+            UART2_Send("StateCH5 esta em DESCIDA.\n");
+            break;
+        default:
+            break;
+    }
+
+    switch (StateCH6) {
+        case INICIO:
+            UART2_Send("StateCH6 esta em INICIO.\n");
+            break;
+        case PLATO:
+            UART2_Send("StateCH6 esta em PLATO.\n");
+            break;
+        case SUBIDA:
+            UART2_Send("StateCH6 esta em SUBIDA.\n");
+            break;
+        case DESCIDA:
+            UART2_Send("StateCH6 esta em DESCIDA.\n");
+            break;
+        default:
+            break;
+    }
+    
+    switch (StateCH7) {
+        case INICIO:
+            UART2_Send("StateCH7 esta em INICIO.\n");
+            break;
+        case PLATO:
+            UART2_Send("StateCH7 esta em PLATO.\n");
+            break;
+        case SUBIDA:
+            UART2_Send("StateCH7 esta em SUBIDA.\n");
+            break;
+        case DESCIDA:
+            UART2_Send("StateCH7 esta em DESCIDA.\n");
+            break;
+        default:
+            break;
+    }
 }
 
 void UART_Read_Data() {
     UART2_Send("UART_Read_Data()\r\n");
+    
+    UART2_Send("RX_index: ");
+    UART2_Send_Decimal(RX_index);
+    UART2_Send("\r\n");
+    UART2_Send("RX_buff[0]: ");
+    UART2_Send_Char(RX_buff[0]);
+    UART2_Send("\r\n");
+
+    
     if (RX_buff[0] == '<' && RX_buff[1] == 'S' && RX_buff[2] == 'T' && RX_buff[3] == 'I' && RX_buff[4] == 'M') {
            UART2_Send("Protocolo 01 - Recebido\r\n");
             strcpy(PROTOCOLO, RX_buff);
@@ -3305,25 +3493,22 @@ void UART_Read_Data() {
                UART2_Send_Char(PROTOCOLO[8]);
                UART2_Send("\r\n");
                UART2_Send_Char(PROTOCOLO[12]);*/
+            RX_buff[0] = '\0';
+            RX_index = 0;
             FLAG_STRING_RECEBIDA = 1;
     } 
-    else {
+    else if(RX_buff[RX_index-1] == '#'){
         UART2_Send("Protocolo 02 - Recebido\r\n");
-        strcpy(PROTOCOLO, RX_buff);
         SeparateBlocks();
-        // UART2_Send(PROTOCOLO);
-        //flag_rx_protocol_received = 1;
-       // FLAG_STRING_RECEBIDA = 1;
+        RX_buff[0] = '\0';
+        RX_index = 0;
+        StateCH0 = PLATO;
+        Pulse_V1();
     }
-
-    UART2_Send("RX_index: ");
-    UART2_Send_Decimal(RX_index);
-    UART2_Send("\r\n");
-    UART2_Send("RX_buff[0]: ");
-    UART2_Send_Char(RX_buff[0]);
-    UART2_Send("\r\n");
-    RX_buff[0] = '\0';
-    RX_index = 0;
+    else{
+            RX_buff[0] = '\0';
+             RX_index = 0;
+    }
 }
 
 void Pulse_V0(int ponto) {
@@ -3647,9 +3832,7 @@ int main(void) {
 
     I2C1_set(100000);
 
-
     Initializes_Equipment();
-
 
     UART1_Send("Testando UART2 recebimento dados - UART1 \r\n");
     UART2_Send("Testando UART2 recebimento dados - UART2 \r\n");
@@ -3665,9 +3848,8 @@ int main(void) {
     BLUE = 1;
 
 
-  Timer4_Start();
+    Timer4_Start();
   
-
     while (1) {
 
 #ifdef RUN
@@ -3682,15 +3864,9 @@ int main(void) {
         }
 
         if (FLAG_STRING_RECEBIDA == 1) {
-            UART2_Send("FLAG_STRING_RECEBIDA\r\n");
-
-            if (flag_rx_protocol_received == 1) {
-                Verify_Protocol02();
-                flag_rx_protocol_received = 0;
-            } else {
-                Verify_Protocol01();
-            }
             FLAG_STRING_RECEBIDA = 0;
+            UART2_Send("FLAG_STRING_RECEBIDA\r\n");
+            Verify_Protocol01();
         }
 
         // Verificação de tensão de bateria

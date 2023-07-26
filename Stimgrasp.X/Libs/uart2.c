@@ -88,19 +88,27 @@ void UART2_Send(char *sendBuffer) {
     }
 }
 
+void UART2_SendInt(int num) {
+    char sendBuffer[20]; // Tamanho do buffer para armazenar a string (ajuste conforme necessário)
+    sprintf(sendBuffer, "%d", num);
 
-void UART2_Send_Decimal(int decimalNumber){
-    char str[30];
-    sprintf(str, "%d", decimalNumber);
-    UART2_Send(str);
+    unsigned int numBytes = 0;
+    int writebufferLen = strlen((char *)sendBuffer);
+
+    while (numBytes < writebufferLen) {
+        while (U2STAbits.UTXBF);
+        U2TXREG = sendBuffer[numBytes];
+        numBytes++;
+    }
 }
+
 
 void UART2_Send_Char(char sendBuffer){
     while (U2STAbits.UTXBF);
     U2TXREG = sendBuffer;
 }
 
-/*void UART2_Send_Decimal(char data){  
+void UART2_Send_Decimal(char data){  
     char buft[10];    
     unsigned char i;
 
@@ -113,8 +121,7 @@ void UART2_Send_Char(char sendBuffer){
         while (U2STAbits.UTXBF);
         
     }
-    
-}*/
+}
 
 
 void RX2_Start() {

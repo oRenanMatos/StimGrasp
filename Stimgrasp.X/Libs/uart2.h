@@ -75,3 +75,7 @@ void UART2_Receive(char *buffer2receive, char *start_sequence, char *stop_sequen
 //-If the function to stop because of the time overflow, then it will return "true"
 //-Both UART1 and UART2 can use the same timer
 bool UART2_Receive_TimeOut(long int maxTime_PeriodOfTimerxOverflow, char *buffer2receive, char *start_sequence, char *stop_sequence);
+
+void UART2_SendInt(int num);
+
+void UART2_Send_Decimal(char data);
